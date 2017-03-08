@@ -48,7 +48,7 @@ function render(time) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 	var projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.5, 1000);
-	var eye = [1, 10, -20];
+	var eye = [1, 40, -100];
 	var target = [0, 0, 0];
 	var up = [0, 1, 0];
 
