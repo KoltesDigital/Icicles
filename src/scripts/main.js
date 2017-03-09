@@ -11,7 +11,7 @@ var textures = twgl.createTextures(gl, {
 })
 
 var arrays = createGrid(100, 10);
-var arrays2 = createGridParticles(64);
+var arrays2 = createGridParticles(128);
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 var bufferInfo2 = twgl.createBufferInfoFromArrays(gl, arrays2);
@@ -41,7 +41,7 @@ function render(time) {
 	if (ready) {
 
 		var projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 1000);
-		var eye = [1, 30, -40];
+		var eye = [1, 30, -80];
 		var target = [0, 3, 0];
 		var up = [0, 1, 0];
 

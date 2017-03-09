@@ -14,10 +14,10 @@ void main() {
   vec4 p = a_position;
   // p.xz = p.xz * 2. - 1.;
   float angleOffset = noiseIQ(p.xyz * 16.);
-  p.x += noiseIQ(p.xyz*4.)*0.4;
+  p.x += noiseIQ(p.xyz*32.)*0.4;
   p.z += noiseIQ(p.xyz*8.)*0.1;
   p.xz -= 0.5;
-  float range = 30.;
+  float range = 80.;
   p.xz *= range;
   // p.xyz += getOffset();
   // float size = 10. * noiseIQ(p.xyz * 0.1);
