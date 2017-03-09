@@ -7,6 +7,8 @@ loadFiles(
 	"shaders/MeshTerrain.vert",
 	"shaders/ParticleBush.frag",
 	"shaders/ParticleBush.vert",
+	"shaders/ParticleGround.frag",
+	"shaders/ParticleGround.vert",
 	"shaders/header.glsl",
 	"shaders/uniforms.glsl",
 	"shaders/modifiers.glsl",
