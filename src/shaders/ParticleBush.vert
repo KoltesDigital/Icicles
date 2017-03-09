@@ -17,22 +17,27 @@ void main() {
   p.x += noiseIQ(p.xyz*4.)*0.4;
   p.z += noiseIQ(p.xyz*8.)*0.1;
   p.xz -= 0.5;
-  p.xz *= 100.;
+  float range = 30.;
+  p.xz *= range;
   // p.xyz += getOffset();
   // float size = 10. * noiseIQ(p.xyz * 0.1);
-  float size = 2.;
+  float size = 20.;
+  vec3 offset = vec3(a_texcoord.x * 0.1, a_texcoord.y, 0) * size;
+  offset = rotateZ(offset, noiseIQ(p.xyz*12.));
+
   float ratio = (p.x / 10.) + p.z * 0.02;
   p.xyz += getOffset();
-  p.x = mod(abs(p.x), 100.) - 50.;
-  p.x *= -1.;
-  size *= sin(ratio * 3.14159) * 0.5 + 0.5;
-  vec3 offset = vec3(a_texcoord.x * 0.4, a_texcoord.y, 0) * size;
+  p.x = mod((p.x), range) - range/2.;
   p.xyz = displace(p.xyz);
+  // p.x *= -1.;
+  // size *= sin(ratio * 3.14159) * 0.5 + 0.5;
+  // offset.x += a_texcoord.y * size * 0.1;
   // p.y += 0.1;
-  p.xyz += rotateY(offset, angleOffset);
+  // p.xyz += rotateY(offset, angleOffset);
   v_position = (u_worldViewProjection * p);
   v_normal = rotateY(vec3(0,0,1), angleOffset);
-  // v_position.xyz += offset;
+  v_position.xyz += offset;
+  v_color = vec4(vec3(1) * abs(a_texcoord.y), 1);
   // v_position = vec4(p.xzy + offset, sin(u_time));
   gl_Position = v_position;
 }

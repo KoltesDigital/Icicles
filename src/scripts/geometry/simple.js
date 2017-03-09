@@ -58,13 +58,23 @@ createGrid = function (dimension, cellSize)
 	for (var cell = 0; cell < cellCount; ++cell) {
 		var x = (cell % dimension) * cellSize - h;
 		var y = Math.floor(cell / dimension) * cellSize - h;
-		var cX = x;
-		var cY = y;
-		Array.prototype.push.apply(bufferArray.position.data, [ x,0,y, x+s,0,y+s, x+s,0,y, x,0,y+s ]);
-		Array.prototype.push.apply(bufferArray.indices.data, [ index, index+1, index+2, index, index+3, index+1 ]);
-		Array.prototype.push.apply(bufferArray.center.data, [ cX,cY, cX,cY, cX,cY, cX,cY ]);
-		Array.prototype.push.apply(bufferArray.color.data, [ 0,0,1,1, 0,0,1,1, 1,0,0,1, 1,0,0,1 ]);
-		index += 4;
+		var cX = (x + x+s + x+s) / 3;
+		var cY = (y + y+s + y+s) / 3;
+		var cX2 = (x + x + x+s) / 3;
+		var cY2 = (y + y+s + y+s) / 3;
+		Array.prototype.push.apply(bufferArray.position.data, [
+			x,0,y, x+s,0,y+s, x+s,0,y,
+			x,0,y, x,0,y+s, x+s,0,y+s]);
+		Array.prototype.push.apply(bufferArray.indices.data, [
+			index, index+1, index+2,
+			index+3, index+4, index+5 ]);
+		Array.prototype.push.apply(bufferArray.center.data, [
+			cX,cY, cX,cY, cX,cY,
+			cX2,cY2, cX2,cY2, cX2,cY2 ]);
+		Array.prototype.push.apply(bufferArray.color.data, [
+			0,0,1,1, 0,0,1,1, 1,0,0,1,
+			1,0,0,1, 1,0,0,1, 1,0,0,1 ]);
+		index += 6;
 	}
 
 	return bufferArray;
