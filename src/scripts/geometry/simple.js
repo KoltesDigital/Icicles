@@ -52,11 +52,11 @@ createGrid = function (dimension, cellSize)
 
 	var index = 0;
 	var s = cellSize;
-	var h = dimension / 2;
+	var h = (dimension / 2) * cellSize;
 
 	for (var cell = 0; cell < cellCount; ++cell) {
-		var x = cell % dimension - h;
-		var y = Math.floor(cell / dimension) - h;
+		var x = (cell % dimension) * cellSize - h;
+		var y = Math.floor(cell / dimension) * cellSize - h;
 		Array.prototype.push.apply(bufferArray.position.data, [ x,0,y, x+s,0,y+s, x+s,0,y, x,0,y+s ]);
 		Array.prototype.push.apply(bufferArray.indices.data, [ index, index+1, index+2, index, index+3, index+1 ]);
 		Array.prototype.push.apply(bufferArray.color.data, [ 0,0,1,1, 0,0,1,1, 1,0,0,1, 1,0,0,1 ]);

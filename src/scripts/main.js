@@ -4,17 +4,17 @@ twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
 var gl = twgl.getWebGLContext(document.getElementById("c"));
 var programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
+var programInfo2 = twgl.createProgramInfo(gl, ["vsParticle", "fsParticle"]);
 
-// var arrays = {
-// 	position: [1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1],
-// 	normal:   [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1],
-// 	texcoord: [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
-// 	indices:  [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23],
-// };
+var textures = twgl.createTextures(gl, {
+	ground1: { src: "images/ground.jpg" },
+})
 
-var arrays = createGrid(100);
+var arrays = createGrid(100, 1);
+var arrays2 = createGridParticles(64);
 
 var bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+var bufferInfo2 = twgl.createBufferInfoFromArrays(gl, arrays2);
 
 var tex = twgl.createTexture(gl, {
 	min: gl.NEAREST,
@@ -35,7 +35,8 @@ var uniforms = {
 	u_shininess: 50,
 	u_specularFactor: 1,
 	u_diffuse: tex,
-	u_time: 0
+	u_time: 0,
+	u_groundTexture: textures.ground1
 };
 
 function render(time) {
@@ -44,12 +45,12 @@ function render(time) {
 	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 	gl.enable(gl.DEPTH_TEST);
-	gl.enable(gl.CULL_FACE);
+	gl.disable(gl.CULL_FACE);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-	var projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.5, 1000);
-	var eye = [1, 40, -100];
-	var target = [0, 0, 0];
+	var projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 1000);
+	var eye = [1, 20, -60];
+	var target = [0, 3, 0];
 	var up = [0, 1, 0];
 
 	var camera = m4.lookAt(eye, target, up);
@@ -67,6 +68,11 @@ function render(time) {
 	twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 	twgl.setUniforms(programInfo, uniforms);
 	gl.drawElements(gl.TRIANGLES, bufferInfo.numElements, gl.UNSIGNED_SHORT, 0);
+
+	gl.useProgram(programInfo2.program);
+	twgl.setBuffersAndAttributes(gl, programInfo2, bufferInfo2);
+	twgl.setUniforms(programInfo2, uniforms);
+	gl.drawElements(gl.TRIANGLES, bufferInfo2.numElements, gl.UNSIGNED_SHORT, 0);
 
 	requestAnimationFrame(render);
 }
