@@ -21,10 +21,11 @@ void main() {
   p.xz *= range;
   // p.xyz += getOffset();
   // float size = 10. * noiseIQ(p.xyz * 0.1);
-  float size = 20.;
-  vec3 offset = vec3(a_texcoord.x * 0.1, a_texcoord.y, 0) * size;
-  offset = rotateZ(offset, noiseIQ(p.xyz*12.));
+  float size = 1. + 3. * (noiseIQ(p.xyz * 32.));
+  vec3 offset = vec3(a_texcoord.x * 0.5, a_texcoord.y, 0) * size;
+  offset = rotateZ(offset, noiseIQ(p.xyz*12.) * 3.14159 * 2.);
 
+  v_color = vec4(vec3(1) * noiseIQ(p.xyz), 1);
   float ratio = (p.x / 10.) + p.z * 0.02;
   p.xyz += getOffset();
   p.x = mod((p.x), range) - range/2.;
@@ -37,7 +38,6 @@ void main() {
   v_position = (u_worldViewProjection * p);
   v_normal = rotateY(vec3(0,0,1), angleOffset);
   v_position.xyz += offset;
-  v_color = vec4(vec3(1) * abs(a_texcoord.y), 1);
   // v_position = vec4(p.xzy + offset, sin(u_time));
   gl_Position = v_position;
 }

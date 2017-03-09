@@ -16,10 +16,11 @@ function start ()
 {
 	meshTerrain = twgl.createBufferInfoFromArrays(gl, createGrid(100, 10));
 	particleBush = twgl.createBufferInfoFromArrays(gl, createGridParticles(128));
-	particleGround = twgl.createBufferInfoFromArrays(gl, createGridParticles(128));
+	particleGround = twgl.createBufferInfoFromArrays(gl, createGridParticles(64));
 
 	shaderMeshTerrain = new Shader("MeshTerrain");
 	shaderParticleBush = new Shader("ParticleBush");
+	shaderParticleGround = new Shader("ParticleGround");
 
 	scene = new Scene();
 
@@ -35,11 +36,15 @@ function render (time)
 	gl.enable(gl.DEPTH_TEST);
 	gl.disable(gl.CULL_FACE);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.clearColor(0,0,0,1);
 
 	if (ready) {
 
+		mouse.update();
+		
 		scene.update(time);
 		scene.draw(particleBush, shaderParticleBush);
+		scene.draw(particleGround, shaderParticleGround);
 
 	} else if (assetsIsLoaded) {
 		start();
