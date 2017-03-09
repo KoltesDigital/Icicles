@@ -1,6 +1,4 @@
 
-precision mediump float;
-
 varying vec4 v_position;
 varying vec4 v_color;
 varying vec3 v_normal;
