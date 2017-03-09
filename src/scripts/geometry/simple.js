@@ -46,6 +46,7 @@ createGrid = function (dimension, cellSize)
 	var cellCount = dimension * dimension;
 	var bufferArray = {
 		position: { numComponents: 3, data: [] },
+		center: { numComponents: 2, data: [] },
 		indices: { numComponents: 3, data: [] },
 		color: { numComponents: 4, data: [] },
 	};
@@ -57,8 +58,11 @@ createGrid = function (dimension, cellSize)
 	for (var cell = 0; cell < cellCount; ++cell) {
 		var x = (cell % dimension) * cellSize - h;
 		var y = Math.floor(cell / dimension) * cellSize - h;
+		var cX = x;
+		var cY = y;
 		Array.prototype.push.apply(bufferArray.position.data, [ x,0,y, x+s,0,y+s, x+s,0,y, x,0,y+s ]);
 		Array.prototype.push.apply(bufferArray.indices.data, [ index, index+1, index+2, index, index+3, index+1 ]);
+		Array.prototype.push.apply(bufferArray.center.data, [ cX,cY, cX,cY, cX,cY, cX,cY ]);
 		Array.prototype.push.apply(bufferArray.color.data, [ 0,0,1,1, 0,0,1,1, 1,0,0,1, 1,0,0,1 ]);
 		index += 4;
 	}
