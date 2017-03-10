@@ -13,6 +13,8 @@ loadFiles(
 	"shaders/ParticleLandscape.vert",
 	"shaders/MeshSkyCube.frag",
 	"shaders/MeshSkyCube.vert",
+	"shaders/MeshScreen.frag",
+	"shaders/MeshScreen.vert",
 	"shaders/header.glsl",
 	"shaders/uniforms.glsl",
 	"shaders/modifiers.glsl",

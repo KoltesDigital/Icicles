@@ -11,3 +11,5 @@ uniform vec4 u_ambient;
 uniform sampler2D u_diffuse;
 uniform sampler2D u_groundTexture;
 uniform vec4 u_specular;
+
+uniform sampler2D u_frameBuffer;

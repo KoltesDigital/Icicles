@@ -19,8 +19,17 @@ var Scene = function ()
 		u_shininess: 50,
 		u_specularFactor: 1,
 		u_time: 0,
-		u_groundTexture: textures.ground1
+		u_groundTexture: textures.ground1,
+		u_frameBuffer: null,
 	};
+
+	this.clear = function ()
+	{
+		gl.enable(gl.DEPTH_TEST);
+		gl.disable(gl.CULL_FACE);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		gl.clearColor(0,0,0,1);
+	}
 
 	this.update = function (time)
 	{
