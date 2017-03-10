@@ -4,7 +4,7 @@ twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
 var gl = twgl.getWebGLContext(document.getElementById("c"));
 var shaderMeshTerrain, shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
-var shaderParticleBush, shaderParticleGround, shaderParticleLandscape;
+var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshTerrain, meshSkyCube, meshLandscape, meshScreen, meshAxis;
 var particleBush, particleGround;
 var scene, frame;
@@ -28,9 +28,9 @@ function start ()
 	shaderMeshTerrain = new Shader("MeshTerrain");
 	shaderMeshSkyCube = new Shader("MeshSkyCube");
 	shaderMeshScreen = new Shader("MeshScreen");
+	shaderMeshLandscape = new Shader("MeshLandscape");
 	shaderParticleBush = new Shader("ParticleBush");
 	shaderParticleGround = new Shader("ParticleGround");
-	shaderParticleLandscape = new Shader("ParticleLandscape");
 
 	scene = new Scene();
 
@@ -59,14 +59,14 @@ function render (time)
 		scene.draw(meshSkyCube, shaderMeshSkyCube);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
-		scene.draw(meshLandscape, shaderParticleLandscape);
+		scene.draw(meshLandscape, shaderMeshLandscape);
 
 		frame.recordStop();
 
 		// post fx
 		scene.draw(meshScreen, shaderMeshScreen);
 
-		// helper
+		// ui
 		gl.disable(gl.DEPTH_TEST);
 		scene.draw(meshAxis, shaderSimple, gl.LINES);
 
