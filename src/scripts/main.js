@@ -2,12 +2,12 @@
 "use strict";
 twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
-var gl = twgl.getWebGLContext(document.getElementById("c"));
+var gl = twgl.getWebGLContext(document.getElementById("c"), { premultipliedAlpha: false, alpha: true });
 var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshSkyCube, meshLandscape, meshScreen, meshAxis;
 var particleBush, particleGround;
-var scene, frame;
+var scene, frame, frameBackground;
 var ready = false;
 
 var textures = twgl.createTextures(gl, {
@@ -32,8 +32,10 @@ function start ()
 
 	scene = new Scene();
 
-	frame = new FrameBuffer();	
+	frame = new FrameBuffer();
+	frameBackground = new FrameBuffer();
 	scene.uniforms.u_frameBuffer = frame.getTexture();
+	scene.uniforms.u_frameBackground = frameBackground.getTexture();
 
 	ready = true;
 }
@@ -50,15 +52,17 @@ function render (time)
 		mouse.update();
 		scene.update(time);
 
-		frame.recordStart();
-
-		// draw
+		// draw background
+		frameBackground.recordStart();
 		scene.clear();
 		scene.draw(meshSkyCube, shaderMeshSkyCube);
+		scene.draw(meshLandscape, shaderMeshLandscape);
+		frameBackground.recordStop();
+
+		frame.recordStart();
+		scene.clear();
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
-		scene.draw(meshLandscape, shaderMeshLandscape);
-
 		frame.recordStop();
 
 		// post fx

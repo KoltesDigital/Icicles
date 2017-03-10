@@ -48,6 +48,7 @@ createGrid = function (dimension, cellSize)
 		position: { numComponents: 3, data: [] },
 		color: { numComponents: 4, data: [] },
 		indices: { numComponents: 3, data: [] },
+		texcoord: { numComponents: 2, data: [] },
 		center: { numComponents: 2, data: [] },
 		grid: { numComponents: 2, data: [] },
 	};
@@ -59,6 +60,8 @@ createGrid = function (dimension, cellSize)
 	for (var cell = 0; cell < cellCount; ++cell) {
 		var line = cell % dimension;
 		var row = Math.floor(cell / dimension);
+		var u = line / dimension;
+		var v = row / dimension;
 		var x = line * cellSize - h;
 		var y = row * cellSize - h;
 		var cX = (x + x+s + x+s) / 3;
@@ -71,6 +74,9 @@ createGrid = function (dimension, cellSize)
 		Array.prototype.push.apply(bufferArray.indices.data, [
 			index, index+1, index+2,
 			index+3, index+4, index+5 ]);
+		Array.prototype.push.apply(bufferArray.texcoord.data, [
+			u,v, u,v, u,v,
+			u,v, u,v, u,v ]);
 		Array.prototype.push.apply(bufferArray.center.data, [
 			cX,cY, cX,cY, cX,cY,
 			cX2,cY2, cX2,cY2, cX2,cY2 ]);
