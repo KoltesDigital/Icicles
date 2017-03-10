@@ -13,3 +13,4 @@ uniform sampler2D u_groundTexture;
 uniform vec4 u_specular;
 
 uniform sampler2D u_frameBuffer;
+uniform sampler2D u_textTexture;

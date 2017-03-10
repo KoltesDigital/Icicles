@@ -2,7 +2,7 @@
 attribute vec4 a_position;
 attribute vec4 a_color;
 attribute vec3 a_normal;
-attribute vec2 a_center;
+attribute vec2 a_texcoord;
 attribute vec2 a_grid;
 
 varying vec4 v_position;
@@ -13,15 +13,21 @@ void main ()
 {
   vec4 p = a_position;
 
-  float range = 10.;
+  float range = 100.;
+  float height = 30.;
 
-  // p.xyz = rotateZ
-  p.xyz *= range * 10.;
+  p.xyz = rotateX(p.xyz, PI / 2.);
+  p.y += 0.5;
+  p.xyz *= 10.;
+  p.x *= range;
+  p.y *= height;
+  p.z = 1000.;
 
-  p.y = noiseIQ(p.xyz * 16.);
-  p.y += 3.0;
+  // p.y = noiseIQ(p.xyz * 16.);
+  // p.y += 3.0;
 
-  v_color = vec4(vec3(1) * (noiseIQ(p.xyz) * 0.5 + 0.5), 1);
+  // v_color = vec4(vec3(1) * (noiseIQ(p.xyz) * 0.5 + 0.5), 1);
+  v_color = vec4(vec3(1) * mod(a_grid.y, 2.), 1);
 
   // float ratio = (p.x / 10.) + p.z * 0.02;
   // p.xyz += getOffset();

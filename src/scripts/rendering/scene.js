@@ -21,6 +21,7 @@ var Scene = function ()
 		u_time: 0,
 		u_groundTexture: textures.ground1,
 		u_frameBuffer: null,
+		u_textTexture: null,
 	};
 
 	this.clear = function ()

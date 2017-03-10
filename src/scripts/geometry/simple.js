@@ -57,8 +57,10 @@ createGrid = function (dimension, cellSize)
 	var h = (dimension / 2) * cellSize;
 
 	for (var cell = 0; cell < cellCount; ++cell) {
-		var x = (cell % dimension) * cellSize - h;
-		var y = Math.floor(cell / dimension) * cellSize - h;
+		var line = cell % dimension;
+		var row = Math.floor(cell / dimension);
+		var x = line * cellSize - h;
+		var y = row * cellSize - h;
 		var cX = (x + x+s + x+s) / 3;
 		var cY = (y + y+s + y+s) / 3;
 		var cX2 = (x + x + x+s) / 3;
@@ -76,8 +78,8 @@ createGrid = function (dimension, cellSize)
 			0,0,1,1, 0,0,1,1, 1,0,0,1,
 			1,0,0,1, 1,0,0,1, 1,0,0,1 ]);
 		Array.prototype.push.apply(bufferArray.grid.data, [
-			x,y, x,y, x,y,
-			x,y, x,y, x,y ]);
+			line,row, line,row, line,row,
+			line,row, line,row, line,row ]);
 		index += 6;
 	}
 

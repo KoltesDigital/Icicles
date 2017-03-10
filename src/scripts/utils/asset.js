@@ -3,12 +3,13 @@ var assets = {};
 var assetsIsLoaded = false;
 
 loadFiles(
-	["shaders/meshes/MeshTerrain.frag",
-	"shaders/meshes/MeshTerrain.vert",
+	[
 	"shaders/meshes/MeshSkyCube.frag",
 	"shaders/meshes/MeshSkyCube.vert",
 	"shaders/meshes/MeshScreen.frag",
 	"shaders/meshes/MeshScreen.vert",
+	"shaders/meshes/MeshText.frag",
+	"shaders/meshes/MeshText.vert",
 	"shaders/meshes/MeshLandscape.frag",
 	"shaders/meshes/MeshLandscape.vert",
 	"shaders/particles/ParticleBush.frag",
@@ -20,7 +21,8 @@ loadFiles(
 	"shaders/header.glsl",
 	"shaders/uniforms.glsl",
 	"shaders/modifiers.glsl",
-	"shaders/utils.glsl"], 
+	"shaders/utils.glsl",
+	], 
 	function (error, content) { 
 	assets = content;
 	assetsIsLoaded = true;

@@ -3,9 +3,9 @@
 twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
 var gl = twgl.getWebGLContext(document.getElementById("c"));
-var shaderMeshTerrain, shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
+var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
-var meshTerrain, meshSkyCube, meshLandscape, meshScreen, meshAxis;
+var meshSkyCube, meshLandscape, meshScreen, meshAxis;
 var particleBush, particleGround;
 var scene, frame;
 var ready = false;
@@ -16,7 +16,6 @@ var textures = twgl.createTextures(gl, {
 
 function start ()
 {
-	meshTerrain = twgl.createBufferInfoFromArrays(gl, createGrid(100, 10));
 	meshSkyCube = twgl.createBufferInfoFromArrays(gl, createCube());
 	meshScreen = twgl.createBufferInfoFromArrays(gl, createPlane());
 	meshAxis = twgl.createBufferInfoFromArrays(gl, createAxis());
@@ -25,7 +24,6 @@ function start ()
 	particleGround = twgl.createBufferInfoFromArrays(gl, createGridParticles(64));
 
 	shaderSimple = new Shader("Simple");
-	shaderMeshTerrain = new Shader("MeshTerrain");
 	shaderMeshSkyCube = new Shader("MeshSkyCube");
 	shaderMeshScreen = new Shader("MeshScreen");
 	shaderMeshLandscape = new Shader("MeshLandscape");
