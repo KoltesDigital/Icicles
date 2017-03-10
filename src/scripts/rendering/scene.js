@@ -47,12 +47,13 @@ var Scene = function ()
 		this.uniforms.u_time = time;
 	}
 
-	this.draw = function (geometry, shader)
+	this.draw = function (geometry, shader, drawType)
 	{
+		drawType = drawType || gl.TRIANGLES;
 		var programInfo = shader.programInfo;
 		gl.useProgram(programInfo.program);
 		twgl.setBuffersAndAttributes(gl, programInfo, geometry);
 		twgl.setUniforms(programInfo, this.uniforms);
-		gl.drawElements(gl.TRIANGLES, geometry.numElements, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(drawType, geometry.numElements, gl.UNSIGNED_SHORT, 0);
 	}
 }

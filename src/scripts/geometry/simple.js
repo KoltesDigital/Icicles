@@ -4,8 +4,8 @@ createAxis = function (s)
 	s = s || 1;
 	return {
 		position: { numComponents: 3, data: [ 0,0,0, s,0,0, 0,0,0, 0,s,0, 0,0,0, 0,0,s ] },
-		indices: { numComponents: 2, data: [ 0,1, 2,3, 4,5 ] },
 		color: { numComponents: 4, data: [ 1,0,0,1, 1,0,0,1, 0,1,0,1, 0,1,0,1, 0,0,1,1, 0,0,1,1 ] },
+		indices: { numComponents: 2, data: [ 0,1, 2,3, 4,5 ] }
 	};
 }
 
@@ -46,9 +46,10 @@ createGrid = function (dimension, cellSize)
 	var cellCount = dimension * dimension;
 	var bufferArray = {
 		position: { numComponents: 3, data: [] },
-		center: { numComponents: 2, data: [] },
-		indices: { numComponents: 3, data: [] },
 		color: { numComponents: 4, data: [] },
+		indices: { numComponents: 3, data: [] },
+		center: { numComponents: 2, data: [] },
+		grid: { numComponents: 2, data: [] },
 	};
 
 	var index = 0;
@@ -74,6 +75,9 @@ createGrid = function (dimension, cellSize)
 		Array.prototype.push.apply(bufferArray.color.data, [
 			0,0,1,1, 0,0,1,1, 1,0,0,1,
 			1,0,0,1, 1,0,0,1, 1,0,0,1 ]);
+		Array.prototype.push.apply(bufferArray.grid.data, [
+			x,y, x,y, x,y,
+			x,y, x,y, x,y ]);
 		index += 6;
 	}
 

@@ -1,4 +1,9 @@
 
+#define PI 3.1415926535897932384626433832795
+#define PI2 6.283185307179586476925286766559
+#define HALFPI 1.5707963267948966192313216916398
+#define HALF3PI 4.7123889803846898576939650749194
+
 float luminance ( vec3 color )
 {
 	return (color.r + color.g + color.b) / 3.0;
@@ -65,6 +70,8 @@ vec4 edge (sampler2D bitmap, vec2 uv, vec2 dimension)
 
 	return color;
 }
+
+float rand ( vec2 seed ){ return fract(sin(dot(seed.xy ,vec2(12.9898,78.233))) * 43758.5453); }
 
 // hash based 3d value noise
 // function taken from https://www.shadertoy.com/view/XslGRr

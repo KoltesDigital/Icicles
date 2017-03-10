@@ -3,11 +3,11 @@
 twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
 var gl = twgl.getWebGLContext(document.getElementById("c"));
-var shaderMeshTerrain, shaderMeshSkyCube, shaderMeshScreen;
+var shaderMeshTerrain, shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderParticleLandscape;
-var meshTerrain, meshSkyCube, meshScreen;
-var particleBush, particleGround, particleLandscape;
-var scene, frameBuffer;
+var meshTerrain, meshSkyCube, meshLandscape, meshScreen, meshAxis;
+var particleBush, particleGround;
+var scene, frame;
 var ready = false;
 
 var textures = twgl.createTextures(gl, {
@@ -19,10 +19,12 @@ function start ()
 	meshTerrain = twgl.createBufferInfoFromArrays(gl, createGrid(100, 10));
 	meshSkyCube = twgl.createBufferInfoFromArrays(gl, createCube());
 	meshScreen = twgl.createBufferInfoFromArrays(gl, createPlane());
+	meshAxis = twgl.createBufferInfoFromArrays(gl, createAxis());
+	meshLandscape = twgl.createBufferInfoFromArrays(gl, createGrid(10,0.1));
 	particleBush = twgl.createBufferInfoFromArrays(gl, createGridParticles(128));
 	particleGround = twgl.createBufferInfoFromArrays(gl, createGridParticles(64));
-	particleLandscape = twgl.createBufferInfoFromArrays(gl, createGridParticles(8));
 
+	shaderSimple = new Shader("Simple");
 	shaderMeshTerrain = new Shader("MeshTerrain");
 	shaderMeshSkyCube = new Shader("MeshSkyCube");
 	shaderMeshScreen = new Shader("MeshScreen");
@@ -30,9 +32,10 @@ function start ()
 	shaderParticleGround = new Shader("ParticleGround");
 	shaderParticleLandscape = new Shader("ParticleLandscape");
 
-	frameBuffer = twgl.createFramebufferInfo(gl);
-
 	scene = new Scene();
+
+	frame = new FrameBuffer();	
+	scene.uniforms.u_frameBuffer = frame.getTexture();
 
 	ready = true;
 }
@@ -43,25 +46,29 @@ function render (time)
 	twgl.resizeCanvasToDisplaySize(gl.canvas);
 	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-	if (ready) {
-
+	if (ready)
+	{
+		// logic
 		mouse.update();
-
 		scene.update(time);
 
-		twgl.bindFramebufferInfo(gl, frameBuffer);
+		frame.recordStart();
 
+		// draw
 		scene.clear();
-
 		scene.draw(meshSkyCube, shaderMeshSkyCube);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
-		scene.draw(particleLandscape, shaderParticleLandscape);
+		scene.draw(meshLandscape, shaderParticleLandscape);
 
-		twgl.bindFramebufferInfo(gl, null);
-		scene.uniforms.u_frameBuffer = frameBuffer.attachments[0];
+		frame.recordStop();
 
+		// post fx
 		scene.draw(meshScreen, shaderMeshScreen);
+
+		// helper
+		gl.disable(gl.DEPTH_TEST);
+		scene.draw(meshAxis, shaderSimple, gl.LINES);
 
 	} else if (assetsIsLoaded) {
 		start();

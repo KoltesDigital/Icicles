@@ -15,6 +15,8 @@ loadFiles(
 	"shaders/MeshSkyCube.vert",
 	"shaders/MeshScreen.frag",
 	"shaders/MeshScreen.vert",
+	"shaders/Simple.frag",
+	"shaders/Simple.vert",
 	"shaders/header.glsl",
 	"shaders/uniforms.glsl",
 	"shaders/modifiers.glsl",

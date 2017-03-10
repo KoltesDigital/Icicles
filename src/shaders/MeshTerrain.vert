@@ -4,6 +4,7 @@ attribute vec4 a_color;
 attribute vec3 a_normal;
 attribute vec2 a_texcoord;
 attribute vec2 a_center;
+attribute vec2 a_grid;
 
 varying vec4 v_position;
 varying vec4 v_color;

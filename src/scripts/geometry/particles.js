@@ -27,8 +27,9 @@ function createGridParticles (dimension)
 {
 	var bufferArray = {
 		position: { numComponents: 3, data: [] }, 
+		color: { numComponents: 4, data: [] }, 
+		indices: { numComponents: 3, data: [] }, 
 		texcoord: { numComponents: 2, data: [] }, 
-		indices: { numComponents: 1, data: [] }, 
 	};
 
 	dimension = dimension || 8;
@@ -43,7 +44,10 @@ function createGridParticles (dimension)
 
 		for (var p = 0; p < 3; ++p) {
 			Array.prototype.push.apply(bufferArray.position.data, [x, y, z]);
+			Array.prototype.push.apply(bufferArray.color.data, [ 1,1,1,1, 1,1,1,1, 1,1,1,1 ]);
 		}
+
+
 
 		// textures coordinates
 		// Array.prototype.push.apply(bufferArray.texcoord.data, [ 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1 ]);
@@ -65,8 +69,8 @@ function createLeavesFromPoints (points)
 {
 	var bufferArray = {
 		position: { numComponents: 3, data: [] }, 
-		normal: { numComponents: 3, data: [] }, 
 		color: { numComponents: 4, data: [] }, 
+		normal: { numComponents: 3, data: [] }, 
 		texcoord: { numComponents: 2, data: [] }, 
 		indices: { numComponents: 2, data: [] }, 
 	};
