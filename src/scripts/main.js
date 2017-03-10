@@ -3,8 +3,8 @@
 twgl.setDefaults({attribPrefix: "a_"});
 var m4 = twgl.m4;
 var gl = twgl.getWebGLContext(document.getElementById("c"));
-var shaderMeshTerrain, shaderParticleBush, shaderParticleGround;
-var meshTerrain, particleBush, particleGround;
+var shaderMeshTerrain, shaderMeshSkyCube, shaderParticleBush, shaderParticleGround, shaderParticleLandscape;
+var meshTerrain, meshSkyCube, particleBush, particleGround, particleLandscape;
 var scene;
 var ready = false;
 
@@ -15,12 +15,16 @@ var textures = twgl.createTextures(gl, {
 function start ()
 {
 	meshTerrain = twgl.createBufferInfoFromArrays(gl, createGrid(100, 10));
+	meshSkyCube = twgl.createBufferInfoFromArrays(gl, createCube());
 	particleBush = twgl.createBufferInfoFromArrays(gl, createGridParticles(128));
 	particleGround = twgl.createBufferInfoFromArrays(gl, createGridParticles(64));
+	particleLandscape = twgl.createBufferInfoFromArrays(gl, createGridParticles(8));
 
 	shaderMeshTerrain = new Shader("MeshTerrain");
+	shaderMeshSkyCube = new Shader("MeshSkyCube");
 	shaderParticleBush = new Shader("ParticleBush");
 	shaderParticleGround = new Shader("ParticleGround");
+	shaderParticleLandscape = new Shader("ParticleLandscape");
 
 	scene = new Scene();
 
@@ -41,10 +45,12 @@ function render (time)
 	if (ready) {
 
 		mouse.update();
-		
+
 		scene.update(time);
+		scene.draw(meshSkyCube, shaderMeshSkyCube);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
+		scene.draw(particleLandscape, shaderParticleLandscape);
 
 	} else if (assetsIsLoaded) {
 		start();

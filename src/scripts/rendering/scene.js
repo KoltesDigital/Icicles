@@ -1,9 +1,9 @@
 
 var Scene = function ()
 {
-	this.projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 1000);
-	this.eye = [1, 30, -80];
-	this.target = [0, 12, 0];
+	this.projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 10000);
+	this.eye = [1, 20, -80];
+	this.target = [0, 20, 0];
 	this.up = [0, 1, 0];
 
 	this.camera = m4.lookAt(this.eye, this.target, this.up);
