@@ -79,3 +79,14 @@ function render (time)
 	requestAnimationFrame(render);
 }
 requestAnimationFrame(render);
+
+var blenderWS = new BlenderWebSocket();
+
+blenderWS.addListener("refresh", function() {
+	console.log("Blender file has been saved, reload assets?");
+	// location.reload();
+});
+
+blenderWS.addListener("time", function(time) {
+	console.log("Time changed: %f seconds.", time);
+});
