@@ -8,6 +8,8 @@ loadFiles(
 	"shaders/meshes/MeshSkyCube.vert",
 	"shaders/meshes/MeshScreen.frag",
 	"shaders/meshes/MeshScreen.vert",
+	"shaders/meshes/MeshLit.frag",
+	"shaders/meshes/MeshLit.vert",
 	"shaders/meshes/MeshText.frag",
 	"shaders/meshes/MeshText.vert",
 	"shaders/meshes/MeshLandscape.frag",

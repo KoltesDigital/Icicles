@@ -6,6 +6,7 @@ var gl = twgl.getWebGLContext(document.getElementById("c"), { premultipliedAlpha
 var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshSkyCube, meshLandscape, meshScreen, meshAxis;
+var entityCube;
 var particleBush, particleGround;
 var scene, frame;
 var ready = false;
@@ -30,6 +31,8 @@ function start ()
 	shaderParticleBush = new Shader("ParticleBush");
 	shaderParticleGround = new Shader("ParticleGround");
 
+	entityCube = new Entity(createCube(), new Shader("MeshLit"));
+	
 	scene = new Scene();
 
 	frame = new FrameBuffer();
@@ -50,10 +53,13 @@ function render (time)
 		mouse.update();
 		scene.update(time);
 
+		entityCube.matrix = m4.rotationY(time);
+
 		// draw
 		frame.recordStart();
 		scene.clear();
 		scene.draw(meshSkyCube, shaderMeshSkyCube);
+		scene.drawEntity(entityCube);
 		// scene.draw(meshLandscape, shaderMeshLandscape);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);

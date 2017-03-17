@@ -11,6 +11,8 @@ var Scene = function ()
 	this.viewProjection = m4.multiply(this.projection, this.view);
 	this.world = m4.rotationY(0);
 
+	console.log(this.world);
+
 	this.uniforms = {
 		u_lightWorldPos: [1, 8, -10],
 		u_lightColor: [1, 0.8, 0.8, 1],
@@ -51,11 +53,24 @@ var Scene = function ()
 
 	this.draw = function (geometry, shader, drawType)
 	{
-		drawType = drawType || gl.TRIANGLES;
 		var programInfo = shader.programInfo;
+		this.uniforms.u_model = m4.identity();
+		drawType = drawType || gl.TRIANGLES;
 		gl.useProgram(programInfo.program);
 		twgl.setBuffersAndAttributes(gl, programInfo, geometry);
 		twgl.setUniforms(programInfo, this.uniforms);
 		gl.drawElements(drawType, geometry.numElements, gl.UNSIGNED_SHORT, 0);
+	}
+
+	this.drawEntity = function (entity, drawType)
+	{
+		var geometry = entity.bufferInfo;
+		var programInfo = entity.shader.programInfo;
+		this.uniforms.u_model = entity.matrix;
+		drawType = drawType || gl.TRIANGLES;
+		gl.useProgram(programInfo.program);
+		twgl.setBuffersAndAttributes(gl, programInfo, geometry);
+		twgl.setUniforms(programInfo, this.uniforms);
+		gl.drawElements(gl.TRIANGLES, geometry.numElements, gl.UNSIGNED_SHORT, 0);
 	}
 }
