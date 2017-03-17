@@ -6,10 +6,11 @@ var gl = twgl.getWebGLContext(document.getElementById("c"), { premultipliedAlpha
 var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshSkyCube, meshLandscape, meshScreen, meshAxis;
-var entityCube;
+var entityCube, blender;
 var particleBush, particleGround;
 var scene, frame;
 var ready = false;
+var blenderWS = new BlenderWebSocket();
 
 var textures = twgl.createTextures(gl, {
 	ground1: { src: "images/ground.jpg" },
@@ -30,11 +31,17 @@ function start ()
 	shaderMeshLandscape = new Shader("MeshLandscape");
 	shaderParticleBush = new Shader("ParticleBush");
 	shaderParticleGround = new Shader("ParticleGround");
+	
+	blenderWS.addListener("refresh", function() {
+		// console.log("Blender file has been saved, reload assets?");
+		location.reload();
+	});
+
+	blenderWS.addListener("time", BlenderDidUpdate);
 
 	entityCube = new Entity(createCube(), new Shader("MeshLit"));
-	
+	blender = new Blender();
 	scene = new Scene();
-
 	frame = new FrameBuffer();
 	scene.uniforms.u_frameBuffer = frame.getTexture();
 
@@ -53,7 +60,6 @@ function render (time)
 		mouse.update();
 		scene.update(time);
 
-		entityCube.matrix = m4.rotationY(time);
 
 		// draw
 		frame.recordStart();
@@ -80,13 +86,8 @@ function render (time)
 }
 requestAnimationFrame(render);
 
-var blenderWS = new BlenderWebSocket();
-
-blenderWS.addListener("refresh", function() {
-	console.log("Blender file has been saved, reload assets?");
-	// location.reload();
-});
-
-blenderWS.addListener("time", function(time) {
-	console.log("Time changed: %f seconds.", time);
-});
+function BlenderDidUpdate (time)
+{
+	// console.log("Time changed: %f seconds.", time);
+	blender.evaluate(entityCube.matrix, "CubeAction", time);
+}

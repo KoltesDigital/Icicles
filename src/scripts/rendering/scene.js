@@ -9,9 +9,7 @@ var Scene = function ()
 	this.camera = m4.lookAt(this.eye, this.target, this.up);
 	this.view = m4.inverse(this.camera);
 	this.viewProjection = m4.multiply(this.projection, this.view);
-	this.world = m4.rotationY(0);
-
-	console.log(this.world);
+	this.world = m4.identity();
 
 	this.uniforms = {
 		u_lightWorldPos: [1, 8, -10],
