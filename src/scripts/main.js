@@ -91,8 +91,11 @@ requestAnimationFrame(render);
 function BlenderDidUpdate (time)
 {
 	blender.evaluate(entityCube.matrix, "CubeAction", time);
-	blender.evaluate(entityAxis.matrix, "CameraAction", time);
-	// blender.evaluate(scene.camera, "CameraAction", time);
+	// blender.evaluate(entityAxis.matrix, "CameraAction", time);
+	// scene.camera = m4.rotationY(3.14159);
+	blender.evaluate(scene.camera, "CameraAction", time);
+	m4.multiply(scene.camera, m4.rotationX(-Math.PI/2.), scene.camera);
+	// m4.transformDirection(entityAxis.matrix, [1,1,1], entityAxis.matrix);
 
 	// console.log(m4.getTranslation(scene.camera), time);
 }

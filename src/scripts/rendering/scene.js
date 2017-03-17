@@ -37,7 +37,7 @@ var Scene = function ()
 	{
 		this.eye = rotateY(this.eye, mouse.delta.x * 0.01);
 
-		this.camera = m4.lookAt(this.eye, this.target, this.up);
+		// this.camera = m4.lookAt(this.eye, this.target, this.up);
 		this.view = m4.inverse(this.camera);
 		this.viewProjection = m4.multiply(this.projection, this.view);
 		this.world = m4.rotationY(0);
