@@ -6,11 +6,14 @@ var gl = twgl.getWebGLContext(document.getElementById("c"), { premultipliedAlpha
 var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshSkyCube, meshLandscape, meshScreen, meshAxis;
-var entityCube, blender;
+var entityCube, entityAxis, blender;
 var particleBush, particleGround;
 var scene, frame;
 var ready = false;
 var blenderWS = new BlenderWebSocket();
+blenderWS.addListener("refresh", function() {
+	location.reload();
+});
 
 var textures = twgl.createTextures(gl, {
 	ground1: { src: "images/ground.jpg" },
@@ -31,15 +34,13 @@ function start ()
 	shaderMeshLandscape = new Shader("MeshLandscape");
 	shaderParticleBush = new Shader("ParticleBush");
 	shaderParticleGround = new Shader("ParticleGround");
-	
-	blenderWS.addListener("refresh", function() {
-		// console.log("Blender file has been saved, reload assets?");
-		location.reload();
-	});
+
 
 	blenderWS.addListener("time", BlenderDidUpdate);
 
 	entityCube = new Entity(createCube(), new Shader("MeshLit"));
+	entityAxis = new Entity(createAxis(), shaderSimple);
+
 	blender = new Blender();
 	scene = new Scene();
 	frame = new FrameBuffer();
@@ -66,6 +67,7 @@ function render (time)
 		scene.clear();
 		scene.draw(meshSkyCube, shaderMeshSkyCube);
 		scene.drawEntity(entityCube);
+		scene.drawEntity(entityAxis, gl.LINES);
 		// scene.draw(meshLandscape, shaderMeshLandscape);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
@@ -88,6 +90,9 @@ requestAnimationFrame(render);
 
 function BlenderDidUpdate (time)
 {
-	// console.log("Time changed: %f seconds.", time);
 	blender.evaluate(entityCube.matrix, "CubeAction", time);
+	blender.evaluate(entityAxis.matrix, "CameraAction", time);
+	// blender.evaluate(scene.camera, "CameraAction", time);
+
+	// console.log(m4.getTranslation(scene.camera), time);
 }

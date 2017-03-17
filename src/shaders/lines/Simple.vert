@@ -8,7 +8,7 @@ varying vec4 v_color;
 void main ()
 {
   v_color = a_color;
-  v_position = a_position;
+  v_position = u_model * a_position;
   v_position = u_worldViewProjection * v_position;
   gl_Position = v_position;
 }

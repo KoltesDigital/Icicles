@@ -3,7 +3,7 @@ var Scene = function ()
 {
 	this.projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 10000);
 	this.eye = [1, 20, -80];
-	this.target = [0, 20, 0];
+	this.target = [0, 0, 0];
 	this.up = [0, 1, 0];
 
 	this.camera = m4.lookAt(this.eye, this.target, this.up);
@@ -69,6 +69,6 @@ var Scene = function ()
 		gl.useProgram(programInfo.program);
 		twgl.setBuffersAndAttributes(gl, programInfo, geometry);
 		twgl.setUniforms(programInfo, this.uniforms);
-		gl.drawElements(gl.TRIANGLES, geometry.numElements, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(drawType, geometry.numElements, gl.UNSIGNED_SHORT, 0);
 	}
 }
