@@ -24,6 +24,7 @@ void main() {
   float size = 20.;
   vec3 offset = vec3(a_texcoord.x * 0.1, a_texcoord.y, 0) * size;
   offset = rotateZ(offset, noiseIQ(p.xyz*12.));
+  offset.x *= u_resolution.y / u_resolution.x;
 
   float ratio = (p.x / 10.) + p.z * 0.02;
   p.xyz += getOffset();

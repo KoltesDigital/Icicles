@@ -8,8 +8,8 @@ vec3 displaceWave (vec3 p)
 
 vec3 getOffset ()
 {
-  // return vec3(0);
-  return vec3(-u_time * 10. - 1000.,0,0);
+  return vec3(0);
+  // return vec3(-u_time * 10. - 1000.,0,0);
 }
 
 vec3 displace (vec3 pp)

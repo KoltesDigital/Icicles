@@ -7,7 +7,7 @@ var shaderMeshSkyCube, shaderMeshScreen, shaderSimple;
 var shaderParticleBush, shaderParticleGround, shaderMeshLandscape;
 var meshSkyCube, meshLandscape, meshScreen, meshAxis;
 var particleBush, particleGround;
-var scene, frame, frameBackground;
+var scene, frame;
 var ready = false;
 
 var textures = twgl.createTextures(gl, {
@@ -33,9 +33,7 @@ function start ()
 	scene = new Scene();
 
 	frame = new FrameBuffer();
-	frameBackground = new FrameBuffer();
 	scene.uniforms.u_frameBuffer = frame.getTexture();
-	scene.uniforms.u_frameBackground = frameBackground.getTexture();
 
 	ready = true;
 }
@@ -52,15 +50,11 @@ function render (time)
 		mouse.update();
 		scene.update(time);
 
-		// draw background
-		frameBackground.recordStart();
-		scene.clear();
-		scene.draw(meshSkyCube, shaderMeshSkyCube);
-		scene.draw(meshLandscape, shaderMeshLandscape);
-		frameBackground.recordStop();
-
+		// draw
 		frame.recordStart();
 		scene.clear();
+		scene.draw(meshSkyCube, shaderMeshSkyCube);
+		// scene.draw(meshLandscape, shaderMeshLandscape);
 		scene.draw(particleBush, shaderParticleBush);
 		scene.draw(particleGround, shaderParticleGround);
 		frame.recordStop();
