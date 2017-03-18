@@ -11,9 +11,9 @@ createAxis = function (s)
 
 createPlane = function ()
 {
-	return { 
+	return {
 		position: [ -1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0 ],
-		texcoord: [ 0, 0, 1, 0, 0, 1, 1, 1 ], 
+		texcoord: [ 0, 0, 1, 0, 0, 1, 1, 1 ],
 		indices: [ 0, 1, 2, 1, 3, 2 ]
 	};
 }
@@ -21,9 +21,9 @@ createPlane = function ()
 createWiredCube = function (s)
 {
 	s = s || 1;
-	return { 
+	return {
 		position: [ -s,-s,-s, s,-s,-s, s,s,-s, -s,s,-s, -s,-s,s, s,-s,s, s,s,s, -s,s,s ],
-		texcoord: [ 0,0, 1,0, 0,1, 1,1 ], 
+		texcoord: [ 0,0, 1,0, 0,1, 1,1 ],
 		color: [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
 		indices: [ 0,1, 1,2, 2,3, 3,0, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4 ],
 	};
@@ -95,9 +95,9 @@ createGrid = function (dimension, cellSize)
 function createCircle (segment)
 {
 	var circle = {
-		position: { numComponents: 3, data: [] }, 
-		color: { numComponents: 4, data: [] }, 
-		texcoord: { numComponents: 2, data: [] }, 
+		position: { numComponents: 3, data: [] },
+		color: { numComponents: 4, data: [] },
+		texcoord: { numComponents: 2, data: [] },
 	};
 
 	segment = segment || 32;
@@ -116,4 +116,47 @@ function createCircle (segment)
 	}
 
 	return circle;
+}
+
+function createRoad (road, count, interval, width)
+{
+	var point = vec2.create();
+
+	var roadAttributes = {
+		position: { numComponents: 3, data: [] },
+		texcoord: { numComponents: 2, data: [] },
+		color: { numComponents: 4, data: [] },
+		indices: [],
+	};
+
+	for (var i = 0; i <= count; ++i) {
+		var unit = i * interval;
+		var angle = road.getPointAndAngle(point, unit);
+
+		// positions
+		Array.prototype.push.apply(roadAttributes.position.data, [
+			point[0] + Math.cos(angle) * width,
+			0,
+			point[1] - Math.sin(angle) * width,
+			point[0] - Math.cos(angle) * width,
+			0,
+			point[1] + Math.sin(angle) * width,
+		]);
+
+		// textures coordinates
+		Array.prototype.push.apply(roadAttributes.texcoord.data, [
+			-1, i,
+			1, i,
+		]);
+
+		// color
+		Array.prototype.push.apply(roadAttributes.color.data, [
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		]);
+
+		roadAttributes.indices.push(i * 2, i * 2 + 1);
+	}
+
+	return roadAttributes;
 }
