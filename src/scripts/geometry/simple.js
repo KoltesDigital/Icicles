@@ -4,7 +4,7 @@ createAxis = function (s)
 	s = s || 1;
 	return {
 		position: { numComponents: 3, data: [ 0,0,0, s,0,0, 0,0,0, 0,s,0, 0,0,0, 0,0,s ] },
-		color: { numComponents: 4, data: [ 1,0,0,1, 1,0,0,1, 0,1,0,1, 0,1,0,1, 0,0,1,1, 0,0,1,1 ] },
+		color: { numComponents: 4, data: [ 1,0,0,1, 1,0,0,1, 0,0.9,0,1, 0,0.9,0,1, 0,0,1,1, 0,0,1,1 ] },
 		indices: { numComponents: 2, data: [ 0,1, 2,3, 4,5 ] }
 	};
 }
