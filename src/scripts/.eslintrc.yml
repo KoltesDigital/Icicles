@@ -1,0 +1,13 @@
+env:
+  amd: true
+  browser: true
+extends: 'eslint:recommended'
+globals:
+  requirejs: false
+rules:
+  indent:
+    - error
+    - tab
+  semi:
+    - error
+    - always
