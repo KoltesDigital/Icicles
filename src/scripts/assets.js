@@ -9,6 +9,7 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		'Simple': 'lines/Simple',
 		'MeshFullScreen': 'meshes/MeshFullScreen',
 		'MeshLandscape': 'meshes/MeshLandscape',
+		'MeshRoad': 'meshes/MeshRoad',
 		'MeshLit': 'meshes/MeshLit',
 		'MeshSkyCube': 'meshes/MeshSkyCube',
 		'MeshText': 'meshes/MeshText',

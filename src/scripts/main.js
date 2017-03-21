@@ -28,7 +28,8 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		var fullScreenQuadEntity = new Entity(fullScreenQuadGeometry, assets.shaders.MeshFullScreen);
 		var bushEntity = new Entity(createGridParticlesGeometry(128), assets.shaders.ParticleBush);
 		var groundEntity = new Entity(createGridParticlesGeometry(64), assets.shaders.ParticleGround);
-		var roadEntity = new Entity(createRoad(road, 50, 50, 20), assets.shaders.Simple);
+		var roadEntity = new Entity(createRoad(road, 50, 50, 20), assets.shaders.MeshRoad);
+		console.log(assets.shaders.MeshRoad);
 
 		var cubeEntity = createCubeEntity();
 
