@@ -1,5 +1,5 @@
-define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'utils/getTime', 'utils/input', 'utils/road'],
-function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, getTime, input, road) {
+define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road'],
+function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road) {
 	"use strict";
 
 	return assets.load(function() {
@@ -32,6 +32,8 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		console.log(assets.shaders.MeshRoad);
 
 		var cubeEntity = createCubeEntity();
+		var voxelEntity = createGridEntity([32,2,32], 30);
+		console.log(voxelEntity);
 
 		function render()
 		{
@@ -44,6 +46,7 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 			input.mouse.update();
 
 			cubeEntity.update(time);
+			voxelEntity.update(time);
 			camera.update(time);
 
 /*
@@ -60,13 +63,15 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 			gl.enable(gl.DEPTH_TEST);
 			gl.disable(gl.CULL_FACE);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			gl.clearColor(0,0,0,1);
 
-			skyCubeEntity.draw();
+			// skyCubeEntity.draw();
 			cubeEntity.draw();
 			// scene.draw(meshLandscape, shaderMeshLandscape);
 			roadEntity.draw();
 			bushEntity.draw();
 			groundEntity.draw();
+			voxelEntity.draw();
 
 			FrameBuffer.recordStop();
 			gl.disable(gl.DEPTH_TEST);

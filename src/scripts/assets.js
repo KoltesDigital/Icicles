@@ -15,6 +15,7 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		'MeshText': 'meshes/MeshText',
 		'ParticleBush': 'particles/ParticleBush',
 		'ParticleGround': 'particles/ParticleGround',
+		'ParticleVoxel': 'particles/ParticleVoxel',
 	};
 
 	var shaderBaseURL = 'shaders/';

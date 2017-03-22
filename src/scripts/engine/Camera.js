@@ -71,6 +71,7 @@ function(assets, blenderHTML5Animations, gl, glMatrix, twgl, uniforms, input)
 		// this.world = m4.rotationY(time);
 
 		uniforms.u_viewInverse = this.matrix;
+		uniforms.u_view = view;
 		uniforms.u_world = this.world;
 		uniforms.u_worldInverseTranspose = m4.transpose(m4.inverse(this.world));
 		uniforms.u_worldViewProjection = m4.multiply(viewProjection, this.world);

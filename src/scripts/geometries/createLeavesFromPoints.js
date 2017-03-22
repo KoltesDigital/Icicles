@@ -1,5 +1,8 @@
-define(function() {
+define(['gl', 'engine/Geometry'],
+function(gl, Geometry) {
+
 	return function(points) {
+
 		var bufferArray = {
 			position: { numComponents: 3, data: [] },
 			color: { numComponents: 4, data: [] },
@@ -32,6 +35,6 @@ define(function() {
 			index += 4;
 		}
 
-		return bufferArray;
+		return new Geometry(bufferArray, gl.TRIANGLES);
 	};
 });
