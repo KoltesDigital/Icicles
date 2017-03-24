@@ -32,7 +32,8 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		var streetEntity = createStreet();
 		var voxelEntity = createGridEntity([8,8,8], 30);
 
-		var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, streetEntity, voxelEntity];
+		var sceneEntityArray = [streetEntity, roadEntity];
+		// var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, streetEntity, voxelEntity];
 
 		function render()
 		{

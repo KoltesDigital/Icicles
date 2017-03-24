@@ -7,7 +7,10 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 
 	var meshDescriptors = {
 		'building1': "meshes/building1.ply",
-		'building1quad': "meshes/building1quad.ply",
+		'building2': "meshes/building2.ply",
+		'building3': "meshes/building3.ply",
+		'pole1': "meshes/pole1.ply",
+		'pole2': "meshes/pole2.ply",
 	};
 
 	var shaderDescriptors = {

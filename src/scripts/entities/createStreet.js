@@ -1,35 +1,57 @@
-define(['twgl', 'assets', 'engine/Entity', 'entities/createBuilding', 'geometries/createCube', 'utils/road'],
-function(twgl, assets, Entity, createBuilding, createCube, road) {
+define(['twgl', 'assets', 'engine/Entity', 'entities/createBuilding', 'geometries/createWiredMesh', 'geometries/createCube', 'geometries/createWiredCube', 'utils/road'],
+function(twgl, assets, Entity, createBuilding, createWiredMesh, createCube, createWiredCube, road) {
 
 	return function () {
 
-		var buildingArray = [];
-		var count = 16;
-		for (var i = 0; i < count; ++i) {
-			buildingArray.push(createBuilding(assets.meshes.building1));
+		function getRoadMatrix (i, range, offset, scale)
+		{
 			var point = [0,0];
 			var angleOffset = (i % 2 == 0) ? 0 : Math.PI;
 			var index = (i % 2 == 0) ? i : i - 1;
-			var angle = road.getPointAndAngle(point, index*150.) + angleOffset;
+			var angle = road.getPointAndAngle(point, index*range) + angleOffset;
 			var matrix = twgl.m4.identity();
-			var offset = (i % 2 == 0) ? [-30,0,0] : [30,0,0];
+			offset[0] = (i % 2 == 0) ? -offset[0] : offset[0];
 			matrix = twgl.m4.translate(matrix, [point[0]+offset[0],offset[1],point[1]+offset[2]]);
-			matrix = twgl.m4.scale(matrix, [10,10,10]);
+			matrix = twgl.m4.scale(matrix, scale);
 			matrix = twgl.m4.axisRotate(matrix, [0,1,0], angle);
-			buildingArray[i].matrix = matrix;
+			return matrix;
 		}
+
+		var drawArray = [];
+
+		var buildingArray = [];
+		var count = 24;
+		for (var i = 0; i < count; ++i) {
+			buildingArray.push(createBuilding(assets.meshes.building1));
+			buildingArray[i].matrix = getRoadMatrix(i, 100, [30,0,0], [10,10,10]);
+		}
+		Array.prototype.push.apply(drawArray, buildingArray);
+
+		var poleArray = [];
+		var poleCount = 100;
+		for (var i = 0; i < poleCount; ++i) {
+			poleArray.push(new Entity(createWiredMesh(assets.meshes.pole1), assets.shaders.LineBuilding));
+			poleArray[i].matrix = getRoadMatrix(i, 20, [25,0,0], [1,1,1]);
+		}
+		Array.prototype.push.apply(drawArray, poleArray);
+
+		var lampArray = [];
+		var lampCount = 10;
+		for (var i = 0; i < lampCount; ++i) {
+			lampArray.push(new Entity(createWiredMesh(assets.meshes.pole2), assets.shaders.LineBuilding));
+			lampArray[i].matrix = getRoadMatrix(i, 100, [27,0,0], [1,1,1]);
+		}
+		Array.prototype.push.apply(drawArray, lampArray);
 
 		var entity = new Entity(createCube(), assets.shaders.MeshLit);
 
 		entity.draw = function() {
-			for (var i = 0; i < buildingArray.length; ++i) {
-				buildingArray[i].draw();
+			for (var i = 0; i < drawArray.length; ++i) {
+				drawArray[i].draw();
 			}
 		}
 
 		entity.update = function(time) {
-			for (var i = 0; i < buildingArray.length; ++i) {
-			}
 		}
 
 		return entity;

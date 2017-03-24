@@ -33,19 +33,14 @@ define(['gl', 'engine/Geometry'], function(gl, Geometry) {
 				var c = parseFloat(column[3]);
 				var d = parseFloat(column[4]);
 				Array.prototype.push.apply(mesh.indices.data, [ a,b, b,c, c,d, d,a ]);
-				// var x = mesh.position.data[a*3		] + mesh.position.data[b*3		] + mesh.position.data[c*3		];
-				// var y = mesh.position.data[a*3 + 1] + mesh.position.data[b*3 + 1] + mesh.position.data[c*3 + 1];
-				// var z = mesh.position.data[a*3 + 2] + mesh.position.data[b*3 + 2] + mesh.position.data[c*3 + 2];
-				// var anchor = [ x / 3.0, y / 3.0, z / 3.0 ];
-				// mesh.anchor.data[a*3		] = anchor[0];
-				// mesh.anchor.data[a*3 + 1] = anchor[1];
-				// mesh.anchor.data[a*3 + 2] = anchor[2];
-				// mesh.anchor.data[b*3		] = anchor[0];
-				// mesh.anchor.data[b*3 + 1] = anchor[1];
-				// mesh.anchor.data[b*3 + 2] = anchor[2];
-				// mesh.anchor.data[c*3		] = anchor[0];
-				// mesh.anchor.data[c*3 + 1] = anchor[1];
-				// mesh.anchor.data[c*3 + 2] = anchor[2];
+			}
+			// indices
+			else if (column.length == 4)
+			{
+				var a = parseFloat(column[1]);
+				var b = parseFloat(column[2]);
+				var c = parseFloat(column[3]);
+				Array.prototype.push.apply(mesh.indices.data, [ a,b, b,c, c,a ]);
 			}
 		}
 
