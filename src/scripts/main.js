@@ -1,5 +1,5 @@
-define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'entities/createBuilding', 'entities/createStreet'],
-function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road, createMesh, createBuildingEntity, createStreet) {
+define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'geometries/createWiredMesh', 'entities/createBuilding', 'entities/createStreet'],
+function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road, createMesh, createWiredMesh, createBuildingEntity, createStreet) {
 	"use strict";
 
 	return assets.load(function() {
@@ -26,13 +26,14 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		var bushEntity = new Entity(createGridParticlesGeometry(128), assets.shaders.ParticleBush);
 		var groundEntity = new Entity(createGridParticlesGeometry(64), assets.shaders.ParticleGround);
 		var roadEntity = new Entity(createRoad(road, 50, 50, 20), assets.shaders.MeshRoad);
+		var carEntity = new Entity(createWiredMesh(assets.meshes.car), assets.shaders.LineBuilding);
 
 		var cubeEntity = createCubeEntity();
 		var building = createBuildingEntity();
 		var streetEntity = createStreet();
 		var voxelEntity = createGridEntity([8,8,8], 30);
 
-		var sceneEntityArray = [streetEntity, roadEntity];
+		var sceneEntityArray = [streetEntity, roadEntity, carEntity];
 		// var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, streetEntity, voxelEntity];
 
 		function render()
