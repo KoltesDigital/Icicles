@@ -24,5 +24,9 @@ define(['gl', 'twgl', 'engine/uniforms'], function(gl, twgl, uniforms)
 		gl.drawElements(this.geometry.mode, bufferInfo.numElements, bufferInfo.elementType, 0);
 	};
 
+	Entity.prototype.update = function(time)
+	{
+	};
+
 	return Entity;
 });
