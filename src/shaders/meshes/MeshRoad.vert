@@ -8,6 +8,7 @@ attribute vec2 a_grid;
 varying vec4 v_position;
 varying vec4 v_color;
 varying vec3 v_normal;
+varying vec4 v_positionView;
 varying vec2 v_texcoord;
 
 void main ()
@@ -16,5 +17,6 @@ void main ()
   v_color = vec4(1);
   v_texcoord = a_texcoord;
   v_position = u_worldViewProjection * p;
+  v_positionView = u_view * u_world * p;
   gl_Position = v_position;
 }

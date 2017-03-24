@@ -6,6 +6,7 @@ define(['twgl'], function(twgl) {
 	var gl = twgl.getWebGLContext(document.getElementById("c"), {
 		premultipliedAlpha: false,
 		alpha: false,
+		antialias: true,
 	});
 
 	gl.clearColor(1, 0, 0, 1);

@@ -4,13 +4,15 @@ function(twgl, assets, Entity, createBuilding, createCube, road) {
 	return function () {
 
 		var buildingArray = [];
-		var count = 8;
-		var offset = [-30,0,0];
+		var count = 16;
 		for (var i = 0; i < count; ++i) {
 			buildingArray.push(createBuilding(assets.meshes.building1));
 			var point = [0,0];
-			var angle = road.getPointAndAngle(point, i*300.);
+			var angleOffset = (i % 2 == 0) ? 0 : Math.PI;
+			var index = (i % 2 == 0) ? i : i - 1;
+			var angle = road.getPointAndAngle(point, index*150.) + angleOffset;
 			var matrix = twgl.m4.identity();
+			var offset = (i % 2 == 0) ? [-30,0,0] : [30,0,0];
 			matrix = twgl.m4.translate(matrix, [point[0]+offset[0],offset[1],point[1]+offset[2]]);
 			matrix = twgl.m4.scale(matrix, [10,10,10]);
 			matrix = twgl.m4.axisRotate(matrix, [0,1,0], angle);
