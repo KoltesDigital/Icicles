@@ -5,6 +5,10 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		},
 	};
 
+	var meshDescriptors = {
+		'building1': "meshes/building1.ply",
+	};
+
 	var shaderDescriptors = {
 		'Simple': 'lines/Simple',
 		'MeshFullScreen': 'meshes/MeshFullScreen',
@@ -19,7 +23,6 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 	};
 
 	var shaderBaseURL = 'shaders/';
-
 
 	var pendingCallbacks = [];
 	var isLoaded = false;
@@ -40,7 +43,7 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 	};
 
 	function notify() {
-		isLoaded = assets.shaders && assets.textures;
+		isLoaded = assets.shaders && assets.textures && assets.meshes;
 
 		if (isLoaded) {
 			return pendingCallbacks.forEach(function(callback) {
@@ -96,6 +99,22 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		if (err) throw err;
 
 		assets.textures = textures;
+		return notify();
+	});
+
+
+	var meshURLs = [];
+	Object.keys(meshDescriptors).forEach(function(name) {
+		meshURLs.push(meshDescriptors[name]);
+	});
+
+	loader.loadFiles(meshURLs, function (err, files) {
+		var meshes = {};
+		Object.keys(meshDescriptors).forEach(function(name, index) {
+			meshes[name] = files[meshDescriptors[name]];
+		});
+		console.log(meshes);
+		assets.meshes = meshes;
 		return notify();
 	});
 

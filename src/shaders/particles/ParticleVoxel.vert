@@ -37,14 +37,14 @@ void main ()
 	vec3 colorB = vec3(35. / 255., 66. / 255., 9. / 255.);
 	vec3 color = mix(colorA, colorB, noise1);
 
-	vec2 leafSize = 4. * vec2(1,10) * ratio;// * noise1;//smoothstep(0.25, 1., noise1);
+	vec2 leafSize = 8. * vec2(1,10) * ratio;// * noise1;//smoothstep(0.25, 1., noise1);
 	// vec2 leafSize = u_leafSize * ratio * noise1;//smoothstep(0.25, 1., noise1);
 
 	normal = normalize(normal * 2.0 - 1.0);
 
 	position.xyz /= gridSize;
 	position.xyz *= voxelSize;
-	position.xyz += normal * 0.5;//u_displacementScale;
+	position.xyz += normal * 2.;//u_displacementScale;
 	// position.xyz += normalize(position.xyz - targetWorld) * 2.;
 
 	float angle = atan(normal.z, normal.x) + 3.1416 * .5;

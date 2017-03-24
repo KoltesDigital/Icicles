@@ -1,5 +1,5 @@
-define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road'],
-function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road) {
+define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh'],
+function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road, createMesh) {
 	"use strict";
 
 	return assets.load(function() {
@@ -29,11 +29,10 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		var bushEntity = new Entity(createGridParticlesGeometry(128), assets.shaders.ParticleBush);
 		var groundEntity = new Entity(createGridParticlesGeometry(64), assets.shaders.ParticleGround);
 		var roadEntity = new Entity(createRoad(road, 50, 50, 20), assets.shaders.MeshRoad);
-		console.log(assets.shaders.MeshRoad);
+		var meshEntity = new Entity(createMesh(assets.meshes.building1), assets.shaders.MeshLit);
 
 		var cubeEntity = createCubeEntity();
-		var voxelEntity = createGridEntity([32,2,32], 30);
-		console.log(voxelEntity);
+		var voxelEntity = createGridEntity([8,8,8], 30);
 
 		function render()
 		{
@@ -65,11 +64,10 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.clearColor(0,0,0,1);
 
-			// skyCubeEntity.draw();
 			cubeEntity.draw();
-			// scene.draw(meshLandscape, shaderMeshLandscape);
 			roadEntity.draw();
 			bushEntity.draw();
+			meshEntity.draw();
 			groundEntity.draw();
 			voxelEntity.draw();
 
