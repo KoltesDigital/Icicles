@@ -1,5 +1,5 @@
-define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'entities/createBuilding'],
-function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road, createMesh, createBuildingEntity) {
+define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'entities/createBuilding', 'entities/createStreet'],
+function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, getTime, input, road, createMesh, createBuildingEntity, createStreet) {
 	"use strict";
 
 	return assets.load(function() {
@@ -29,9 +29,10 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 
 		var cubeEntity = createCubeEntity();
 		var building = createBuildingEntity();
+		var streetEntity = createStreet();
 		var voxelEntity = createGridEntity([8,8,8], 30);
 
-		var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, building, voxelEntity];
+		var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, streetEntity, voxelEntity];
 
 		function render()
 		{

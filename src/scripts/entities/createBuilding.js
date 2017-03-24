@@ -4,7 +4,7 @@ function(assets, Entity, createMesh) {
 	return function () {
 
 		var geometry = createMesh(assets.meshes.building1);
-		var entity = new Entity(geometry, assets.shaders.MeshLit);
+		var entity = new Entity(geometry, assets.shaders.MeshBuilding);
 
 		entity.update = function(time) {
 		}

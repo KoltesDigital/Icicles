@@ -15,6 +15,7 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		'MeshLandscape': 'meshes/MeshLandscape',
 		'MeshRoad': 'meshes/MeshRoad',
 		'MeshLit': 'meshes/MeshLit',
+		'MeshBuilding': 'meshes/MeshBuilding',
 		'MeshSkyCube': 'meshes/MeshSkyCube',
 		'MeshText': 'meshes/MeshText',
 		'ParticleBush': 'particles/ParticleBush',
@@ -113,7 +114,6 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		Object.keys(meshDescriptors).forEach(function(name, index) {
 			meshes[name] = files[meshDescriptors[name]];
 		});
-		console.log(meshes);
 		assets.meshes = meshes;
 		return notify();
 	});

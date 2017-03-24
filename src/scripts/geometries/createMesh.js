@@ -32,8 +32,6 @@ define(['gl', 'engine/Geometry'], function(gl, Geometry) {
 			}
 		}
 
-		console.log(mesh);
-
 		return new Geometry(mesh, gl.TRIANGLES);
 	}
 });
