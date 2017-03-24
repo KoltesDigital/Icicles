@@ -65,6 +65,10 @@ function(assets, blenderHTML5Animations, gl, glMatrix, twgl, uniforms, input)
 			m4.multiply(this.matrix, m4.rotationX(-Math.PI/2.), this.matrix);
 		}
 
+		this.updateUniforms();
+	};
+
+	Camera.prototype.updateUniforms = function() {
 		var view = m4.inverse(this.matrix);
 		var viewProjection = m4.multiply(this.projection, view);
 

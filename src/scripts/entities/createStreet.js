@@ -1,17 +1,16 @@
-define(['twgl', 'assets', 'engine/Entity', 'entities/createBuilding', 'geometries/createWiredMesh', 'geometries/createCube', 'geometries/createWiredCube', 'utils/road'],
-function(twgl, assets, Entity, createBuilding, createWiredMesh, createCube, createWiredCube, road) {
+define(['gl-matrix', 'twgl', 'assets', 'engine/Entity', 'entities/createBuilding', 'geometries/createWiredMesh', 'geometries/createCube', 'geometries/createWiredCube', 'utils/road'],
+function(glMatrix, twgl, assets, Entity, createBuilding, createWiredMesh, createCube, createWiredCube, road) {
 
 	return function () {
 
 		function getRoadMatrix (i, range, offset, scale)
 		{
-			var point = [0,0];
-			var angleOffset = (i % 2 == 0) ? 0 : Math.PI;
+			var angle = (i % 2 == 0) ? 0 : Math.PI;
 			var index = (i % 2 == 0) ? i : i - 1;
-			var angle = road.getPointAndAngle(point, index*range) + angleOffset;
 			var matrix = twgl.m4.identity();
+			road.getUprightMatrix(matrix, index*range);
 			offset[0] = (i % 2 == 0) ? -offset[0] : offset[0];
-			matrix = twgl.m4.translate(matrix, [point[0]+offset[0],offset[1],point[1]+offset[2]]);
+			matrix = twgl.m4.translate(matrix, offset);
 			matrix = twgl.m4.scale(matrix, scale);
 			matrix = twgl.m4.axisRotate(matrix, [0,1,0], angle);
 			return matrix;
