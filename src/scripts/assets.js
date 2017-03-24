@@ -7,10 +7,12 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 
 	var meshDescriptors = {
 		'building1': "meshes/building1.ply",
+		'building1quad': "meshes/building1quad.ply",
 	};
 
 	var shaderDescriptors = {
 		'Simple': 'lines/Simple',
+		'LineBuilding': 'lines/LineBuilding',
 		'MeshFullScreen': 'meshes/MeshFullScreen',
 		'MeshLandscape': 'meshes/MeshLandscape',
 		'MeshRoad': 'meshes/MeshRoad',
