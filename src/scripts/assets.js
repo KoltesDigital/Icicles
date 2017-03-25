@@ -12,6 +12,7 @@ define(['actions', 'blenderHTML5Animations', 'gl', 'twgl', 'utils/loader'], func
 		'pole1': "meshes/pole1.ply",
 		'pole2': "meshes/pole2.ply",
 		'car': "meshes/car.ply",
+		'car2': "meshes/car2.line",
 	};
 
 	var shaderDescriptors = {

@@ -1,5 +1,5 @@
-define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/generatedInfo', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'geometries/createWiredMesh', 'entities/createBuilding', 'entities/createStreet'],
-function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, generatedInfo, getTime, input, road, createMesh, createWiredMesh, createBuildingEntity, createStreet) {
+define(['gl', 'twgl', 'assets', 'engine/Camera', 'engine/Entity', 'engine/FrameBuffer', 'engine/uniforms', 'entities/createCube', 'entities/createGrid', 'geometries/createAxis', 'geometries/createCube', 'geometries/createFullScreenQuad', 'geometries/createGridParticles', 'geometries/createRoad', 'geometries/createLeavesFromPoints', 'utils/generatedInfo', 'utils/getTime', 'utils/input', 'utils/road', 'geometries/createMesh', 'geometries/createWiredMesh', 'entities/createBuilding', 'entities/createStreet', 'geometries/createLandscape', 'geometries/createLineMesh'],
+function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEntity, createGridEntity, createAxisGeometry, createCubeGeometry, createFullScreenQuadGeometry, createGridParticlesGeometry, createRoad, createLeavesFromPoints, generatedInfo, getTime, input, road, createMesh, createWiredMesh, createBuildingEntity, createStreet, createLandscape, createLineMesh) {
 	"use strict";
 
 	return assets.load(function() {
@@ -8,9 +8,7 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		function onWindowResize() {
 			twgl.resizeCanvasToDisplaySize(gl.canvas);
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
 			uniforms.u_resolution = [gl.canvas.width, gl.canvas.height];
-
 			camera.updateProjectionMatrix();
 		}
 		onWindowResize();
@@ -27,15 +25,19 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 		var groundEntity = new Entity(createGridParticlesGeometry(64), assets.shaders.ParticleGround);
 		//var roadEntity = new Entity(createRoad(road, 500, 50, 20), assets.shaders.MeshRoad);
 		//glMatrix.mat4.translate(roadEntity.matrix, roadEntity.matrix, [0, 0, -1000]);
-		var carEntity = new Entity(createWiredMesh(assets.meshes.car), assets.shaders.LineBuilding);
+		// var carEntity = new Entity(createWiredMesh(assets.meshes.car), assets.shaders.LineBuilding);
+		var landsacpeEntity = new Entity(createLandscape(road, 100, 100, 1), assets.shaders.MeshBuilding);
+		var carEntity = new Entity(createLineMesh(assets.meshes.car2), assets.shaders.LineBuilding);
 
 		var cubeEntity = createCubeEntity();
 		var building = createBuildingEntity();
 		var streetEntity = createStreet();
 		var voxelEntity = createGridEntity([8,8,8], 30);
 
-		var sceneEntityArray = [streetEntity, carEntity];
+		var sceneEntityArray = [streetEntity, carEntity, landsacpeEntity];
 		// var sceneEntityArray = [bushEntity, groundEntity, roadEntity, cubeEntity, streetEntity, voxelEntity];
+
+		var followMatrix = twgl.m4.identity();
 
 		function render()
 		{
@@ -53,6 +55,11 @@ function (gl, twgl, assets, Camera, Entity, FrameBuffer, uniforms, createCubeEnt
 
 			var distance = generatedInfo.getDistance(time);
 			road.getTiltedMatrix(carEntity.matrix, distance);
+
+			camera.matrix = twgl.m4.identity();
+			road.getTiltedMatrix(camera.matrix, distance);
+			twgl.m4.multiply(camera.matrix, twgl.m4.rotationY(Math.PI), camera.matrix);
+			twgl.m4.multiply(camera.matrix, twgl.m4.translation([-4,22.7,5.6]), camera.matrix);
 /*
 			var point = vec2.create();
 			var angle = road.getPointAndAngle(point, time * 10);

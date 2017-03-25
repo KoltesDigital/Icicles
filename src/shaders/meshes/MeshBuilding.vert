@@ -15,7 +15,13 @@ void main ()
   vec3 surfaceToView = normalize((u_viewInverse[3] - (u_world * position)).xyz);
 
   float lit = dot(v_normal, surfaceToView);
+  lit = lit * 0.5 + 0.5;
+  // lit = 1. - lit;
+
+  vec4 positionView = u_view * u_world * position;
+	float far = 1.-clamp(abs(positionView.z)*0.0005,0.,1.);
+
   v_color = vec4(1);
-  v_color.rgb *= lit;
+  v_color.rgb *= lit * far;
   gl_Position = u_worldViewProjection * position;
 }

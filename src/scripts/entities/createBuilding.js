@@ -9,7 +9,7 @@ function(twgl, gl, assets, uniforms, Entity, createMesh, createWiredMesh) {
 		}
 
 		var geometry = createWiredMesh(randomBuilding());
-		var entity = new Entity(geometry, assets.shaders.LineBuilding);
+		var entity = new Entity(geometry, assets.shaders.MeshBuilding);
 
 		entity.update = function(time) {
 		}

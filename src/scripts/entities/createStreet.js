@@ -3,12 +3,16 @@ function(glMatrix, twgl, assets, Entity, createBuilding, createWiredMesh, create
 
 	return function () {
 
-		function getRoadMatrix (i, range, offset, scale)
+		function getRoadMatrix (i, range, offset, scale, upright)
 		{
 			var angle = (i % 2 == 0) ? 0 : Math.PI;
 			var index = (i % 2 == 0) ? i : i - 1;
 			var matrix = twgl.m4.identity();
-			road.getUprightMatrix(matrix, index*range);
+			if (upright) {
+				road.getUprightMatrix(matrix, index*range);
+			} else {
+				road.getTiltedMatrix(matrix, index*range);
+			}
 			offset[0] = (i % 2 == 0) ? -offset[0] : offset[0];
 			matrix = twgl.m4.translate(matrix, offset);
 			matrix = twgl.m4.scale(matrix, scale);
@@ -22,23 +26,23 @@ function(glMatrix, twgl, assets, Entity, createBuilding, createWiredMesh, create
 		var count = 24;
 		for (var i = 0; i < count; ++i) {
 			buildingArray.push(createBuilding(assets.meshes.building1));
-			buildingArray[i].matrix = getRoadMatrix(i, 100, [30,0,0], [10,10,10]);
+			buildingArray[i].matrix = getRoadMatrix(i, 100, [30,0,0], [10,10,10], true);
 		}
 		Array.prototype.push.apply(drawArray, buildingArray);
 
 		var poleArray = [];
 		var poleCount = 100;
 		for (var i = 0; i < poleCount; ++i) {
-			poleArray.push(new Entity(createWiredMesh(assets.meshes.pole1), assets.shaders.LineBuilding));
-			poleArray[i].matrix = getRoadMatrix(i, 20, [25,0,0], [1,1,1]);
+			poleArray.push(new Entity(createWiredMesh(assets.meshes.pole1), assets.shaders.MeshBuilding));
+			poleArray[i].matrix = getRoadMatrix(i, 20, [25,0,0], [1,1,1], false);
 		}
 		Array.prototype.push.apply(drawArray, poleArray);
 
 		var lampArray = [];
 		var lampCount = 10;
 		for (var i = 0; i < lampCount; ++i) {
-			lampArray.push(new Entity(createWiredMesh(assets.meshes.pole2), assets.shaders.LineBuilding));
-			lampArray[i].matrix = getRoadMatrix(i, 100, [27,0,0], [1,1,1]);
+			lampArray.push(new Entity(createWiredMesh(assets.meshes.pole2), assets.shaders.MeshBuilding));
+			lampArray[i].matrix = getRoadMatrix(i, 100, [27,0,0], [1,1,1], false);
 		}
 		Array.prototype.push.apply(drawArray, lampArray);
 

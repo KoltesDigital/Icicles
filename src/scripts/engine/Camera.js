@@ -3,7 +3,8 @@ function(assets, blenderHTML5Animations, gl, glMatrix, twgl, uniforms, input)
 {
 	var m4 = twgl.m4;
 
-	var useDebugCamera = true;
+	var useDebugCamera = false;
+	var useAnimation = false;
 
 	function Camera()
 	{
@@ -60,7 +61,9 @@ function(assets, blenderHTML5Animations, gl, glMatrix, twgl, uniforms, input)
 				++dz;
 
 			glMatrix.mat4.translate(this.matrix, this.matrix, [dx, dy, dz]);
-		} else {
+		}
+		else if (useAnimation)
+		{
 			assets.actions['CameraAction'].toWorld(this.matrix, time, blenderHTML5Animations.Action.RotationMode.EULER_XYZ);
 			m4.multiply(this.matrix, m4.rotationX(-Math.PI/2.), this.matrix);
 		}
