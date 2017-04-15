@@ -21,6 +21,7 @@ function Pass (shader, width, height, format, type)
 		uniforms.frameBuffer.value = this.frameBuffer.getTexture();
 		this.frameBuffer.swap();
 		renderer.render(this.scene, this.camera, this.frameBuffer.getTarget(), true);
+		return this.frameBuffer.getTexture();
 	}
 
 	this.getTexture = function ()

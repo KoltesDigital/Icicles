@@ -20,6 +20,7 @@ var shaderDescriptors = {
 	'particle.frag': 'particle.frag',
 	'render.frag': 'render.frag',
 	'position.frag': 'position.frag',
+	'velocity.frag': 'velocity.frag',
 	'feedback.frag': 'feedback.frag',
 };
 

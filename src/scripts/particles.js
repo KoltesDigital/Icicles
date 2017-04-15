@@ -1,8 +1,8 @@
 
-function Particles ()
+function Particles (dimension)
 {
 	this.geometry = new THREE.BufferGeometry();
-	var dimension = 64;
+	dimension = dimension || 64;
 	var count = dimension*dimension;
 	var vertices = new Float32Array(count * 3 * 3);
 	var texcoord = new Float32Array(count * 3 * 2);

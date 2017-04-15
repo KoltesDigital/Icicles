@@ -1,7 +1,7 @@
 
 var container, stats;
 var camera, scene, sceneBuffer, renderer;
-var uniforms, positionPass, particles;
+var uniforms, positionPass, velocityPass, particles;
 
 assets.load(function() {
 
@@ -19,11 +19,15 @@ assets.load(function() {
 			time: { value: 1.0 },
 			frameBuffer: { value: 0 },
 			positionTexture: { value: 0 },
+			velocityTexture: { value: 0 },
 			spawnTexture: { value: 0 },
 			resolution: { value: new THREE.Vector2() }
 		};
-		// buffer
-		positionPass = new Pass(assets.shaders['position.frag']);
+
+		var dimension = 64;
+
+		positionPass = new Pass(assets.shaders['position.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+		velocityPass = new Pass(assets.shaders['velocity.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 
 		// render
 		// scene.add(new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
@@ -33,7 +37,7 @@ assets.load(function() {
 		// })));
 
 		// particles
-		particles = new Particles();
+		particles = new Particles(dimension);
 		uniforms.spawnTexture.value = particles.dataTexture;
 		scene.add(new THREE.Mesh( particles.geometry, new THREE.ShaderMaterial( {
 			uniforms: uniforms,
@@ -59,8 +63,8 @@ assets.load(function() {
 	function animate() {
 		requestAnimationFrame( animate );
 		uniforms.time.value += 0.05;
-		positionPass.update();
-		uniforms.positionTexture.value = positionPass.getTexture();
+		uniforms.velocityTexture.value = velocityPass.update();
+		uniforms.positionTexture.value = positionPass.update();
 		renderer.render(scene, camera);
 	}
 });
