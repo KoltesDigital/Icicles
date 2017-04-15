@@ -70,8 +70,8 @@ function Particles (uniforms)
 
 	this.mesh = new THREE.Mesh( this.geometry, new THREE.ShaderMaterial( {
 		uniforms: uniforms,
-		vertexShader: document.getElementById( 'vertexShaderParticle' ).textContent,
-		fragmentShader: document.getElementById( 'fragmentShaderParticle' ).textContent,
+		vertexShader: assets.shaders["particle.vert"],
+		fragmentShader: assets.shaders["particle.frag"],
 		side: THREE.DoubleSide
 	}));
 }
