@@ -1,16 +1,150 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-		<title>Icicles</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-	</head>
-	<body>
-		<canvas id="c"></canvas>
-		<!-- <div id="overlay">
-			<div id="text">icicles</div>
-		</div> -->
-		<script data-main="scripts/index" src="scripts/require.js"></script>
-	</body>
+<head>
+	<meta charset="utf8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<title>ThreeJS</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+	<div id="container"></div>
+
+
+	<script id="vertexShader" type="x-shader/x-vertex">
+		varying vec2 vUv;
+		void main()	{
+			vUv = uv;
+			gl_Position = vec4(mix(-1., 1., uv.x), mix(-1., 1., uv.y), 0., 1.);
+		}
+	</script>
+
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		varying vec2 vUv;
+		uniform vec2 resolution;
+		uniform float time;
+		uniform sampler2D frame;
+		uniform sampler2D positionTexture;
+		void main()	{
+			vec4 color = texture2D(frame, vUv);
+			gl_FragColor = color;
+		}
+	</script>
+
+	<script id="fragmentShaderBuffer" type="x-shader/x-fragment">
+		varying vec2 vUv;
+		uniform vec2 resolution;
+		uniform float time;
+		uniform sampler2D frame;
+		uniform sampler2D positionTexture;
+
+		float rand ( vec2 seed ){ return fract(sin(dot(seed.xy ,vec2(12.9898,78.233))) * 43758.5453); }
+
+		// hash based 3d value noise
+		// function taken from https://www.shadertoy.com/view/XslGRr
+		// Created by inigo quilez - iq/2013
+		// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+		// ported from GLSL to HLSL
+		float hash( float n )
+		{
+			return fract(sin(n)*43758.5453);
+		}
+
+		vec3 rotateY(vec3 v, float t)
+		{
+			float cost = cos(t); float sint = sin(t);
+			return vec3(v.x * cost + v.z * sint, v.y, -v.x * sint + v.z * cost);
+		}
+
+		vec3 rotateX(vec3 v, float t)
+		{
+			float cost = cos(t); float sint = sin(t);
+			return vec3(v.x, v.y * cost - v.z * sint, v.y * sint + v.z * cost);
+		}
+
+		vec3 rotateZ(vec3 p, float angle)
+		{
+			float c = cos(angle);
+			float s = sin(angle);
+			return vec3(c*p.x+s*p.y, -s*p.x+c*p.y, p.z);
+		}
+
+		float noiseIQ( vec3 x )
+		{
+			// The noise function returns a value in the range -1.0f -> 1.0f
+			vec3 p = floor(x);
+			vec3 f = fract(x);
+			f       = f*f*(3.0-2.0*f);
+			float n = p.x + p.y*57.0 + 113.0*p.z;
+			return mix(mix(mix( hash(n+0.0), hash(n+1.0),f.x),
+			 mix( hash(n+57.0), hash(n+58.0),f.x),f.y),
+			mix(mix( hash(n+113.0), hash(n+114.0),f.x),
+			 mix( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
+		}
+		void main()	{
+			vec4 spawn = texture2D(positionTexture, vUv);
+			vec4 buffer = texture2D(frame, vUv);
+			buffer.x += (noiseIQ(spawn.xyz+buffer.xyz*5.)*2.-1.)*0.1;
+			buffer.y += (noiseIQ(spawn.xyz+buffer.xyz*4.)*2.-1.)*0.1;
+			buffer.z += (noiseIQ(spawn.xyz+buffer.xyz*6.)*2.-1.)*0.1;
+			// buffer.xyz += normalize(buffer.xyz)*0.1;
+			spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
+			gl_FragColor = mix(spawn, buffer, smoothstep(0.4,0.6,abs(noiseIQ(spawn.xyz*3.))));
+		}
+	</script>
+
+	<script id="vertexShaderParticle" type="x-shader/x-vertex">
+		attribute vec3 color;
+		attribute vec2 texcoord;
+		varying vec2 vTexcoord;
+		varying vec3 vColor;
+		varying vec3 vPosition;
+		uniform sampler2D frame;
+		uniform sampler2D positionTexture;
+		uniform float time;
+
+		vec3 rotateY(vec3 v, float t)
+		{
+			float cost = cos(t); float sint = sin(t);
+			return vec3(v.x * cost + v.z * sint, v.y, -v.x * sint + v.z * cost);
+		}
+
+		vec3 rotateX(vec3 v, float t)
+		{
+			float cost = cos(t); float sint = sin(t);
+			return vec3(v.x, v.y * cost - v.z * sint, v.y * sint + v.z * cost);
+		}
+
+		vec3 rotateZ(vec3 p, float angle)
+		{
+			float c = cos(angle);
+			float s = sin(angle);
+			return vec3(c*p.x+s*p.y, -s*p.x+c*p.y, p.z);
+		}
+		void main() {
+			vTexcoord = texcoord;
+			vPosition = position;
+			vColor = color;
+			vec3 pos = texture2D(frame, position.xy).xyz;
+			pos = rotateX(rotateY(pos, time*0.2),time*0.1);
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+			gl_Position.xy += texcoord * 0.05;
+		}
+	</script>
+
+	<script id="fragmentShaderParticle" type="x-shader/x-fragment">
+		varying vec2 vTexcoord;
+		varying vec3 vColor;
+		varying vec3 vPosition;
+		uniform vec2 resolution;
+		uniform float time;
+		void main()	{
+			gl_FragColor = vec4(vPosition,1.);
+		}
+	</script>
+	<script src="scripts/libs/three.js"></script>
+	<script src="scripts/framebuffer.js"></script>
+	<script src="scripts/particles.js"></script>
+	<script src="scripts/main.js"></script>
+</body>
 </html>
