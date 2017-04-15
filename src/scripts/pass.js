@@ -16,7 +16,7 @@ function Pass (shader, width, height, format, type)
 		fragmentShader: shader
 	})));
 
-	this.update = function (renderer)
+	this.update = function ()
 	{
 		uniforms.frameBuffer.value = this.frameBuffer.getTexture();
 		this.frameBuffer.swap();

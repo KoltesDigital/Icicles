@@ -2,12 +2,12 @@
 varying vec2 vUv;
 uniform vec2 resolution;
 uniform float time;
-uniform sampler2D frame;
-uniform sampler2D positionTexture;
+uniform sampler2D frameBuffer;
+uniform sampler2D spawnTexture;
 
 void main()	{
-	vec4 spawn = texture2D(positionTexture, vUv);
-	vec4 buffer = texture2D(frame, vUv);
+	vec4 spawn = texture2D(spawnTexture, vUv);
+	vec4 buffer = texture2D(frameBuffer, vUv);
 	buffer.x += (noiseIQ(spawn.xyz+buffer.xyz*5.)*2.-1.)*0.1;
 	buffer.y += (noiseIQ(spawn.xyz+buffer.xyz*4.)*2.-1.)*0.1;
 	buffer.z += (noiseIQ(spawn.xyz+buffer.xyz*6.)*2.-1.)*0.1;

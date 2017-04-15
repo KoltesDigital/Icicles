@@ -17,9 +17,9 @@ assets.load(function() {
 
 		uniforms = {
 			time: { value: 1.0 },
-			frame: { value: 0 },
-			positionFrame: { value: 0 },
+			frameBuffer: { value: 0 },
 			positionTexture: { value: 0 },
+			spawnTexture: { value: 0 },
 			resolution: { value: new THREE.Vector2() }
 		};
 		// buffer
@@ -34,7 +34,7 @@ assets.load(function() {
 
 		// particles
 		particles = new Particles();
-		uniforms.positionTexture.value = particles.dataTexture;
+		uniforms.spawnTexture.value = particles.dataTexture;
 		scene.add(new THREE.Mesh( particles.geometry, new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["particle.vert"],
@@ -59,6 +59,8 @@ assets.load(function() {
 	function animate() {
 		requestAnimationFrame( animate );
 		uniforms.time.value += 0.05;
+		positionPass.update();
+		uniforms.positionTexture.value = positionPass.getTexture();
 		renderer.render(scene, camera);
 	}
 });
