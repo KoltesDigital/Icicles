@@ -1,7 +1,9 @@
+
+var container, stats;
+var camera, scene, sceneBuffer, renderer;
+var uniforms, positionPass, particles;
+
 assets.load(function() {
-	var container, stats;
-	var camera, scene, sceneBuffer, renderer;
-	var uniforms, frameBuffer, particles;
 
 	init();
 	animate();
@@ -12,8 +14,6 @@ assets.load(function() {
 		camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 1, 3500 );
 		camera.position.z = 10;
 		scene = new THREE.Scene();
-		sceneBuffer = new THREE.Scene();
-		var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
 
 		uniforms = {
 			time: { value: 1.0 },
@@ -23,22 +23,24 @@ assets.load(function() {
 			resolution: { value: new THREE.Vector2() }
 		};
 		// buffer
-		sceneBuffer.add( new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
-			uniforms: uniforms,
-			vertexShader: assets.shaders['fullscreen.vert'],
-			fragmentShader: assets.shaders['position.frag']
-		})));
+		positionPass = new Pass(assets.shaders['position.frag']);
 
 		// render
-		// scene.add( new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
+		// scene.add(new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
 		// 	uniforms: uniforms,
 		// 	vertexShader: assets.shaders['fullscreen.vert'],
 		// 	fragmentShader: assets.shaders['render.frag']
 		// })));
 
 		// particles
-		particles = new Particles(uniforms);
-		scene.add(particles.mesh);
+		particles = new Particles();
+		uniforms.positionTexture.value = particles.dataTexture;
+		scene.add(new THREE.Mesh( particles.geometry, new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders["particle.vert"],
+			fragmentShader: assets.shaders["particle.frag"],
+			side: THREE.DoubleSide
+		})));
 
 		renderer = new THREE.WebGLRenderer();
 		renderer.setPixelRatio( window.devicePixelRatio );
@@ -57,11 +59,6 @@ assets.load(function() {
 	function animate() {
 		requestAnimationFrame( animate );
 		uniforms.time.value += 0.05;
-		uniforms.frame.value = particles.positionFrame.getTexture();
-		uniforms.positionTexture.value = particles.dataTexture;
-		particles.mesh.updateMatrix();
-		particles.positionFrame.swap();
-		renderer.render(sceneBuffer, camera, particles.positionFrame.getTarget(), true);
 		renderer.render(scene, camera);
 	}
 });

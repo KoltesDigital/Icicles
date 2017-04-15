@@ -1,5 +1,5 @@
 
-function Particles (uniforms)
+function Particles ()
 {
 	this.geometry = new THREE.BufferGeometry();
 	var dimension = 64;
@@ -67,11 +67,4 @@ function Particles (uniforms)
 	this.geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 	this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
 	this.geometry.computeBoundingSphere();
-
-	this.mesh = new THREE.Mesh( this.geometry, new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders["particle.vert"],
-		fragmentShader: assets.shaders["particle.frag"],
-		side: THREE.DoubleSide
-	}));
 }

@@ -20,6 +20,7 @@ var shaderDescriptors = {
 	'particle.frag': 'particle.frag',
 	'render.frag': 'render.frag',
 	'position.frag': 'position.frag',
+	'feedback.frag': 'feedback.frag',
 };
 
 var shaderBaseURL = 'shaders/';
