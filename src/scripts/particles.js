@@ -1,11 +1,10 @@
 
-function Particles (dimension)
+function Particles (array)
 {
 	this.geometry = new THREE.BufferGeometry();
-	dimension = dimension || 64;
+	var dimension = closestPowerOfTwo(array.length / 3);
 	var count = dimension*dimension;
-	var vertices = new Float32Array(count * 3 * 3);
-	var texcoord = new Float32Array(count * 3 * 2);
+	var vertices = new Float32Array(count * 3);
 	var x, y, z;
 	var range = 1.;
 	var triangleIndex = 0;
@@ -15,9 +14,9 @@ function Particles (dimension)
 	// Triangles
 	for (var i = 0; i < vertices.length; i+=9) {
 
-		x = (triangleIndex % dimension) / dimension;
-		y = (Math.floor(triangleIndex / dimension) % dimension) / dimension;
-		z = Math.floor(triangleIndex / (dimension*dimension)) / dimension;
+		x = array[triangleIndex*3+0];
+		y = array[triangleIndex*3+1];
+		z = array[triangleIndex*3+2];
 
 		// A
 		vertices[i+0] = x;
@@ -49,22 +48,34 @@ function Particles (dimension)
 	this.dataTexture.needsUpdate = true;
 
 	// UV
+	var anchor = new Float32Array(count * 3 * 2);
+	var texcoord = new Float32Array(count * 3 * 2);
 	for (var i = 0; i < texcoord.length; i+=6) {
 
 		var x = (i % dimension) / dimension;
 		var y = Math.floor(i / dimension) / dimension;
-		// A
-		texcoord[i] = 0;
-		texcoord[i+1] = 1;
-		// B
-		texcoord[i+2] = -1;
-		texcoord[i+3] = -1;
-		// C
-		texcoord[i+4] = 1;
-		texcoord[i+5] = -1;
+		// Anchor A
+		anchor[i] = 0;
+		anchor[i+1] = 1;
+		// Anchor B
+		anchor[i+2] = -1;
+		anchor[i+3] = -1;
+		// Anchor C
+		anchor[i+4] = 1;
+		anchor[i+5] = -1;
+		// ID A
+		texcoord[i] = x;
+		texcoord[i+1] = y;
+		// ID B
+		texcoord[i+2] = x;
+		texcoord[i+3] = y;
+		// ID C
+		texcoord[i+4] = x;
+		texcoord[i+5] = y;
 	}
 
 	this.geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+	this.geometry.addAttribute( 'anchor', new THREE.BufferAttribute( anchor, 2 ) );
 	this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
 	this.geometry.computeBoundingSphere();
 }

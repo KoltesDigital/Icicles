@@ -1,7 +1,7 @@
 
 var container, stats;
 var camera, scene, sceneBuffer, renderer;
-var uniforms, positionPass, velocityPass, particles;
+var uniforms, positionPass, velocityPass, particles, feedbackPass;
 
 assets.load(function() {
 
@@ -11,7 +11,7 @@ assets.load(function() {
 	function init() {
 
 		container = document.getElementById( 'container' );
-		camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 1, 3500 );
+		camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 3500 );
 		camera.position.z = 10;
 		scene = new THREE.Scene();
 
@@ -20,14 +20,16 @@ assets.load(function() {
 			frameBuffer: { value: 0 },
 			positionTexture: { value: 0 },
 			velocityTexture: { value: 0 },
+			feedbackTexture: { value: 0 },
 			spawnTexture: { value: 0 },
 			resolution: { value: new THREE.Vector2() }
 		};
 
-		var dimension = 64;
+		var dimension = 128;
 
 		positionPass = new Pass(assets.shaders['position.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 		velocityPass = new Pass(assets.shaders['velocity.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+		feedbackPass = new Pass(assets.shaders['feedback.frag']);
 
 		// render
 		// scene.add(new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
@@ -37,14 +39,23 @@ assets.load(function() {
 		// })));
 
 		// particles
-		particles = new Particles(dimension);
+		// scene.add(new THREE.Mesh( particles.geometry, new THREE.ShaderMaterial( {
+		// 	uniforms: uniforms,
+		// 	vertexShader: assets.shaders["particle.vert"],
+		// 	fragmentShader: assets.shaders["particle.frag"],
+		// 	side: THREE.DoubleSide
+		// })));
+		console.log(assets.geometries["cookie"]);
+		// particles = new Particles([assets.geometries["cookie"].attributes.position.array]);
+		var aa = assets.geometries["cookie"].attributes.position.array;
+		particles = new Particles(aa);
 		uniforms.spawnTexture.value = particles.dataTexture;
-		scene.add(new THREE.Mesh( particles.geometry, new THREE.ShaderMaterial( {
-			uniforms: uniforms,
-			vertexShader: assets.shaders["particle.vert"],
-			fragmentShader: assets.shaders["particle.frag"],
-			side: THREE.DoubleSide
-		})));
+		scene.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
+				uniforms: uniforms,
+				vertexShader: assets.shaders["particle.vert"],
+				fragmentShader: assets.shaders["particle.frag"],
+				side: THREE.DoubleSide
+			})));
 
 		renderer = new THREE.WebGLRenderer();
 		renderer.setPixelRatio( window.devicePixelRatio );
@@ -65,6 +76,7 @@ assets.load(function() {
 		uniforms.time.value += 0.05;
 		uniforms.velocityTexture.value = velocityPass.update();
 		uniforms.positionTexture.value = positionPass.update();
+		uniforms.feedbackTexture.value = feedbackPass.update();
 		renderer.render(scene, camera);
 	}
 });

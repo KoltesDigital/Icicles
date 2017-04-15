@@ -1,3 +1,7 @@
+
+
+var plyLoader = new THREE.PLYLoader();
+
 var textureDescriptors = {
 	// 'ground': {
 	// 	src: "images/ground.jpg",
@@ -12,6 +16,10 @@ var meshDescriptors = {
 	// 'pole2': "meshes/pole2.ply",
 	// 'car': "meshes/car.ply",
 	// 'car2': "meshes/car2.line",
+};
+
+var geometryDescriptors = {
+	'cookie': 'meshes/Cookie.ply'
 };
 
 var shaderDescriptors = {
@@ -42,10 +50,13 @@ function load(callback) {
 var assets = {
 	// 'actions': new blenderHTML5Animations.ActionLibrary(actionsDescriptor),
 	'load': load,
+	'geometries': {}
 };
 
 function notify() {
-	isLoaded = assets.shaders;// && assets.textures && assets.meshes;
+	isLoaded = assets.shaders && Object.keys(assets.geometries).length == Object.keys(geometryDescriptors).length;
+	// && assets.meshes;
+	// && assets.textures 
 
 	if (isLoaded) {
 		return pendingCallbacks.forEach(function(callback) {
@@ -100,15 +111,21 @@ loadFiles(shaderURLs, function (err, files) {
 // });
 
 
-// var meshURLs = [];
-// Object.keys(meshDescriptors).forEach(function(name) {
-// 	meshURLs.push(meshDescriptors[name]);
-// });
+var meshURLs = [];
+Object.keys(geometryDescriptors).forEach(function(name) {
+	plyLoader.load(geometryDescriptors[name], function(geometry){
+		assets.geometries[name] = geometry;
+		return notify();
+	});
+});
+
 
 // loadFiles(meshURLs, function (err, files) {
 // 	var meshes = {};
 // 	Object.keys(meshDescriptors).forEach(function(name, index) {
 // 		meshes[name] = files[meshDescriptors[name]];
+
+
 // 	});
 // 	assets.meshes = meshes;
 // 	return notify();
