@@ -9,15 +9,6 @@
 <body>
 	<div id="container"></div>
 
-
-	<script id="vertexShader" type="x-shader/x-vertex">
-		varying vec2 vUv;
-		void main()	{
-			vUv = uv;
-			gl_Position = vec4(mix(-1., 1., uv.x), mix(-1., 1., uv.y), 0., 1.);
-		}
-	</script>
-
 	<script id="fragmentShader" type="x-shader/x-fragment">
 		varying vec2 vUv;
 		uniform vec2 resolution;
