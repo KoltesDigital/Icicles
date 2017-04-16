@@ -8,10 +8,10 @@ uniform sampler2D velocityTexture;
 uniform mat4 cameraMatrix;
 
 // Raymarching
-const float rayEpsilon = 0.001;
+const float rayEpsilon = 0.000001;
 const float rayMin = 0.1;
 const float rayMax = 1000.0;
-const int rayCount = 64;
+const int rayCount = 50;
 
 // Camera
 uniform vec3 eye;
@@ -47,9 +47,16 @@ void main()	{
 		vec3 p = eye + ray * t;
 
 		// Distance to Sphere
-		// float d = sdBox(p, vec3(0.1));
-		p = mod(p, gridSize) - gridSize/2.;
-		float d = sphere(p, 0.2);
+		// p = mod(p, gridSize) - gridSize/2.;
+		float c = pModPolar(p.xz, 5.);
+		p.x -= sin(time) * 0.5 + 0.5;
+		p.xyz = rotateY(rotateX(rotateZ(p.xyz, time*0.3), time*0.2), time*0.1);
+		// p.xz += c;
+		p.x += (noiseIQ(p.xyz*3.0)*2.-1.)*0.2;
+		p.y += (noiseIQ(p.xyz*3.5)*2.-1.)*0.2;
+		p.z += (noiseIQ(p.xyz*2.5)*2.-1.)*0.2;
+		float d = sdBox(p, vec3(0.5));
+		// float d = sphere(p, 0.2);
 
 		// Distance min or max reached
 		if (d < rayEpsilon || t > rayMax)

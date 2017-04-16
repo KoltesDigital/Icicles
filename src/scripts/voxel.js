@@ -1,126 +1,90 @@
 
-public class Voxel 
+function Voxel (index, position, normal, color)
 {
-	public int index;
-	public Vector3 position;
-	public Vector3 normal;
-	public Color color;
-
-	public Voxel (int index_, Vector3 position_, Vector3 normal_, Color color_)
-	{
-		index = index_;
-		position = position_;
-		normal = normal_;
-		color = color_;
-	}
+	this.index = index;
+	this.position = position;
+	this.normal = normal;
+	this.color = color;
 }
 
-public static class Voxelize
+function voxelize (geometry, texture, scale)
 {
-	public static List<Voxel> ParseVertices (Mesh mesh, Texture2D texture, float densityScale = 1f)
-	{
-		List<Voxel> voxelList = new List<Voxel>();
-		Vector3[] vertices = mesh.vertices;
-		Vector3[] normals = mesh.normals;
-		Vector2[] uvs = mesh.uv;
-		int[] triangles = mesh.triangles;
-		int range = 128;
+	scale = scale || 1;
+	var attributes = {
+		position: { array: [] },
+		normal: { array: [] },
+		uv: { array: [] },
+		color: { array: [] },
+	}
+	var voxelList = [];
+	var vertices = geometry.attributes.position.array;
+	var normals = geometry.attributes.normal.array;
+	var uvs = geometry.attributes.uv.array;
+	console.log(geometry);
+	var range = 512;
+	var triangleCount = vertices.length / 6;
+	var grid = [[],[],[],[],[],[],[],[]];
 
-		int[][] grid = new int[8][];
-		for (int i = 0; i < 8; ++i) {
-			grid[i] = new int[range * range * range];
-		}
-
-
-		// triangles
-		for (int t = 0; t < triangles.Length - 2; t += 3)
-		{
-			int iA = triangles[t];
-			int iB = triangles[t + 1];
-			int iC = triangles[t + 2];
-			Vector3 a = vertices[iA] * densityScale;
-			Vector3 b = vertices[iB] * densityScale;
-			Vector3 c = vertices[iC] * densityScale;
-			// Vector3 normal = Vector3.Normalize(Vector3.Cross(b - a, c - a));
-			Vector3 min = Vector3.Min(Vector3.Min(a, b), c);
-			Vector3 max = Vector3.Max(Vector3.Max(a, b), c);
-			if (Mathf.Abs(max.x - min.x) < 1f) { max.x += 1f; }
-			if (Mathf.Abs(max.y - min.y) < 1f) { max.y += 1f; }
-			if (Mathf.Abs(max.z - min.z) < 1f) { max.z += 1f; }
-			Vector3 size = new Vector3(Mathf.Abs(max.x - min.x), Mathf.Abs(max.y - min.y), Mathf.Abs(max.z - min.z));
-
-			// For each voxel in bounds
-			int gridCount = (int)(size.x * size.y * size.z);
-			for (int v = 0; v < gridCount; ++v)
-			{
-				// Position in triangle grid
-				float x = v % size.x;
-				float y = Mathf.Floor( v / (size.x * size.z )) % size.y;
-				float z = Mathf.Floor( v / size.x ) % size.z;
-				Vector3 gridPosition = new Vector3(min.x + x, min.y + y, min.z + z);
-
-				// Unique ID by position
-				int voxelIndex = (int)Mathf.Floor(
-					Mathf.Abs(gridPosition.x) % range
-					+ Mathf.Abs(gridPosition.z) * range
-					+ Mathf.Abs(gridPosition.y) * range * range);
-				
-        int gridIndex = 0;
-				if(gridPosition.x >= 0) { gridIndex |= 4; }
-				if(gridPosition.y >= 0) { gridIndex |= 2; }
-				if(gridPosition.z >= 0) { gridIndex |= 1; }
-				
-				if (voxelIndex < range * range * range) {
-					int voxel = grid[gridIndex][voxelIndex];
-					if (voxel == 0)
-					{
-						// Intersection test
-						Vector3 voxelBoundsCenter = gridPosition + Vector3.one * 0.5f;
-						Vector3 voxelBoundsDimension = Vector3.one * 0.5f;
-						if (0 != Utils.TriBoxOverlap(voxelBoundsCenter, voxelBoundsDimension, a, b, c))
-						{
-							// Define the position (no duplicate)
-							grid[gridIndex][voxelIndex] = 1;
-
-							// Vector3 aG = a - gridPosition;
-							// Vector3 bG = b - gridPosition;
-							// Vector3 cG = c - gridPosition;
-							// Vector3 vABC = Vector3.Cross(a - b, a - c);
-							// Vector3 vA = Vector3.Cross(bG, cG);
-							// Vector3 vB = Vector3.Cross(cG, aG);
-							// Vector3 vC = Vector3.Cross(aG, bG);
-							// float areaTotal = vABC.magnitude;
-							// float areaA = vA.magnitude / areaTotal * Mathf.Sin(Vector3.Dot(vABC, vA));
-							// float areaB = vB.magnitude / areaTotal * Mathf.Sin(Vector3.Dot(vABC, vB));
-							// float areaC = vC.magnitude / areaTotal * Mathf.Sin(Vector3.Dot(vABC, vC));
-							Vector3 g = voxelBoundsCenter;
-							float areaTotal = Utils.TriangleArea(a, b, c);
-							float areaA = Utils.TriangleArea(g, b, c) / areaTotal;
-							float areaB = Utils.TriangleArea(a, g, c) / areaTotal;
-							float areaC = Utils.TriangleArea(a, b, g) / areaTotal;
-
-							Vector2 uv = Vector2.zero;
-							uv = uvs[iA];// * areaA;// + uvs[iB] * areaB + uvs[iC] * areaC;
-							// uv = Vector2.Lerp(uv, uvs[iA], areaA);
-							// uv = Vector2.Lerp(uv, uvs[iB], areaB);
-							// uv = Vector2.Lerp(uv, uvs[iC], areaC);
-
-							Color color = texture.GetPixelBilinear(uv.x, uv.y);
-							// Color color = new Color(areaA, areaB, areaC);
-							// Color color = new Color(uv.x, uv.y, 0);
-
-							Vector3 normal = Vector3.zero;
-							normal = normals[iA] * areaA + normals[iB] * areaB + normals[iC] * areaC;
-							// normal = Vector3.Lerp(normal, normals[iA], areaA);
-							// normal = Vector3.Lerp(normal, normals[iB], areaB);
-							// normal = Vector3.Lerp(normal, normals[iC], areaC);
-
-							voxelList.Add(new Voxel(voxelIndex, gridPosition / densityScale, normal.normalized, color));
-						}
+	for (var tri = 0; tri < triangleCount; ++tri) {
+		var iax = tri*9;
+		var iay = tri*9+1;
+		var iaz = tri*9+2;
+		var ibx = tri*9+3;
+		var iby = tri*9+4;
+		var ibz = tri*9+5;
+		var icx = tri*9+6;
+		var icy = tri*9+7;
+		var icz = tri*9+8;
+		var a = (new THREE.Vector3(vertices[iax],vertices[iay],vertices[iaz])).multiplyScalar(scale);
+		var b = (new THREE.Vector3(vertices[ibx],vertices[iby],vertices[ibz])).multiplyScalar(scale);
+		var c = (new THREE.Vector3(vertices[icx],vertices[icy],vertices[icz])).multiplyScalar(scale);
+		var min = (new THREE.Vector3(a.x, a.y, a.z)).min(b).min(c);
+		var max = (new THREE.Vector3(a.x, a.y, a.z)).max(b).max(c);
+		if (Math.abs(max.x-min.x)<1) max.x+=1;
+		if (Math.abs(max.y-min.y)<1) max.y+=1;
+		if (Math.abs(max.z-min.z)<1) max.z+=1;
+		var size = new THREE.Vector3(Math.abs(max.x-min.x),Math.abs(max.y-min.y),Math.abs(max.z-min.z));
+		var gridCount = Math.ceil(size.x*size.y*size.z);
+		for (var vox = 0; vox < gridCount; ++vox) {
+			var x = vox % size.x;
+			var y = Math.floor(vox/(size.x*size.z)) % size.y;
+			var z = Math.floor(vox/size.x) % size.z;
+			var gridPosition = new THREE.Vector3(min.x+x, min.y+y, min.z+z);
+			var voxelIndex = Math.floor(Math.abs(gridPosition.x)%range+Math.abs(gridPosition.y)*range+Math.abs(gridPosition.z)*range*range);
+			var gridIndex = 0;
+			if (gridPosition.x>=0) gridIndex |= 4;
+			if (gridPosition.y>=0) gridIndex |= 2;
+			if (gridPosition.z>=0) gridIndex |= 1;
+			if (voxelIndex < range*range*range) {
+				var voxel = grid[gridIndex][voxelIndex];
+				if (voxel == undefined) {
+					var voxelBoundsCenter = gridPosition.add(new THREE.Vector3(0.5,0.5,0.5));
+					var voxelBoundsDimension = new THREE.Vector3(0.5,0.5,0.5);
+					if (triBoxOverlap(voxelBoundsCenter, voxelBoundsDimension, a, b, c) != 0) {
+						grid[gridIndex][voxelIndex] = 1;
+						var areaTotal = triangleArea(a, b, c);
+						var areaA = triangleArea(voxelBoundsCenter, b, c) / areaTotal;
+						var areaB = triangleArea(a, voxelBoundsCenter, c) / areaTotal;
+						var areaC = triangleArea(a, b, voxelBoundsCenter) / areaTotal;
+						var uvAX = uvs[tri*6]; var uvAY = uvs[tri*6+1];
+						var uvBX = uvs[tri*6+2]; var uvBY = uvs[tri*6+3];
+						var uvCX = uvs[tri*6+4]; var uvCY = uvs[tri*6+5];
+						// var uvX = (uvAX*areaA + uvBX*areaB + uvCX*areaC)/3;
+						// var uvY = (uvAY*areaA + uvBY*areaB + uvCY*areaC)/3;
+						var uvX = lerp(lerp(uvAX, uvBX, areaB), uvCX, areaC);
+						var uvY = lerp(lerp(uvAY, uvBY, areaB), uvCY, areaC);
+						// voxelList.push(new Voxel(voxelIndex, gridPosition.multiplyScalar(scale), new THREE.Vector3(0,1,0), new THREE.Color(255,0,0)));
+						var position = new THREE.Vector3(gridPosition.x, gridPosition.y, gridPosition.z);
+						position.divideScalar(scale);
+						attributes.position.array.push(position.x, position.y, position.z);
+						// attributes.uv.array.push(uvs[tri*6],uvs[tri*6+1]);
+						attributes.uv.array.push(uvX, uvY);
+						attributes.normal.array.push(0, 1, 0);
+						attributes.color.array.push(1,1,1);
 					}
 				}
 			}
 		}
-		return voxelList;
 	}
+	return attributes;
 }

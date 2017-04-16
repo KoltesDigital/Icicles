@@ -1,9 +1,9 @@
 
 
-var plyLoader = new THREE.PLYLoader();
-
 var textureDescriptors = {
-	'panorama': "images/Room.jpg"
+	'panorama': "images/Room.jpg",
+	'mallard': "images/mallard.png",
+	'male': "images/male.png",
 };
 
 var meshDescriptors = {
@@ -17,7 +17,9 @@ var meshDescriptors = {
 };
 
 var geometryDescriptors = {
-	'cookie': 'meshes/Cookie.ply'
+	'cookie': 'meshes/Cookie.ply',
+	'mallard': 'meshes/mallard.obj',
+	'male': 'meshes/male.obj',
 };
 
 var shaderDescriptors = {
@@ -71,6 +73,7 @@ var shaderURLs = [
 	// "uniforms.glsl",
 	// "modifiers.glsl",
 	"utils.glsl",
+	// "hg_sdf.glsl",
 ].map(function(name) {
 	return shaderBaseURL + name;
 });
@@ -84,7 +87,7 @@ Object.keys(shaderDescriptors).forEach(function(name) {
 loadFiles(shaderURLs, function (err, files) {
 	if (err) throw err;
 
-	var headers = files[shaderBaseURL + "utils.glsl"];
+	var headers = files[shaderBaseURL + "utils.glsl"];// + files[shaderBaseURL + "hg_sdf.glsl"];
 
 	function fileWithHeaders(name) {
 		return headers + files[name];
@@ -114,12 +117,25 @@ Object.keys(textureDescriptors).forEach(function(name) {
 });
 
 
+var plyLoader = new THREE.PLYLoader();
+var objLoader = new THREE.OBJLoader();
+
 var meshURLs = [];
 Object.keys(geometryDescriptors).forEach(function(name) {
-	plyLoader.load(geometryDescriptors[name], function(geometry){
-		assets.geometries[name] = geometry;
-		return notify();
-	});
+	var url = geometryDescriptors[name];
+	var infos = url.split('.');
+	var extension = infos[infos.length-1];
+	if (extension == 'ply') {
+		plyLoader.load(url, function(geometry){
+			assets.geometries[name] = geometry;
+			return notify();
+		});
+	} else if (extension == 'obj') {
+		objLoader.load(url, function(geometry){
+			assets.geometries[name] = geometry;
+			return notify();
+		});
+	}
 });
 
 

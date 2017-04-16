@@ -23,13 +23,13 @@ void main()	{
 	vec3 noisey = vec3(0.);
 	vec3 seed = spawn+position+buffer.xyz;
 	// seed = rotateX(rotateY(seed, time*0.03), time*0.06);
-	noisey.x += (noiseIQ(seed.xyz*2.5)*2.-1.)*0.1;
-	noisey.y += (noiseIQ(seed.xyz*1.4)*2.-1.)*0.1;
-	noisey.z += (noiseIQ(seed.xyz*3.3)*2.-1.)*0.1;
+	noisey.x += (noiseIQ(seed.xyz*2.5)*2.-1.)*0.2;
+	noisey.y += (noiseIQ(seed.xyz*1.4)*2.-1.)*0.2;
+	noisey.z += (noiseIQ(seed.xyz*3.3)*2.-1.)*0.2;
 	noisey.xyz *= speed;
 
 	// tornardo
-	float tornadoSpeed = 0.2;
+	float tornadoSpeed = 0.1;
 	vec3 tornado = normalize(epsilon + position - (target + rotateY(position - target, abs(position.y )))) * speed * tornadoSpeed;
 
 	// dir
@@ -37,11 +37,12 @@ void main()	{
 	vec3 dir = vec3(0,1,0) * speed * dirSpeed;
 
 	// origin
-	vec3 origin = normalize(spawn.xyz - position.xyz + epsilon) * speed;
+	float originSpeed = 0.1;
+	vec3 origin = normalize(spawn.xyz - position.xyz + epsilon) * speed * originSpeed;
 
 	// apply
 	// spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
-	float should = smoothstep(0.3,0.7,mod(noiseIQ(color*3.) + time * 0.05,1.0));
+	float should = smoothstep(0.3,0.7,mod(noiseIQ(seed) + time * 0.05,1.0));
 	gl_FragColor.xyz  = buffer.xyz * 0.9 + (tornado + dir + noisey) * should + origin * (1. - should);// * step(1.0, length(spawn.xyz - position.xyz));
 
 	// spawning

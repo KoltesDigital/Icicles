@@ -1,4 +1,9 @@
 
+//https://github.com/mattdesl/lerp/blob/master/index.js
+function lerp(v0, v1, t) {
+    return v0*(1-t)+v1*t
+}
+
 // Find the closest power of 2
 function closestPowerOfTwo (num) {
 		return Math.pow(2, Math.ceil(Math.log(num) / Math.log(2)));
@@ -31,7 +36,14 @@ function planeBoxOverlap(normal, vert, maxbox)
 	return 0;
 }
 
-function triBoxOverlap(boxcenter, boxhalfsize, triangle)
+function triangleArea (a, b, c)
+{
+	var ab = (new THREE.Vector3(a.x,a.y,a.z)).sub(b);
+	var ac = (new THREE.Vector3(a.x,a.y,a.z)).sub(c);
+	return ab.cross(ac).length() / 2;
+}
+
+function triBoxOverlap(boxcenter, boxhalfsize, a, b, c)
 {
 	var v0 = {x:0, y:0, z:0};
 	var v1 = {x:0, y:0, z:0};
@@ -44,9 +56,9 @@ function triBoxOverlap(boxcenter, boxhalfsize, triangle)
 
 	/* This is the fastest branch on Sun */
 	/* move everything so that the boxcenter is in (0,0,0) */
-	v0.x = triangle.a.x - boxcenter.x; v0.y = triangle.a.y - boxcenter.y; v0.z = triangle.a.z - boxcenter.z;
-	v1.x = triangle.b.x - boxcenter.x; v1.y = triangle.b.y - boxcenter.y; v1.z = triangle.b.z - boxcenter.z;
-	v2.x = triangle.c.x - boxcenter.x; v2.y = triangle.c.y - boxcenter.y; v2.z = triangle.c.z - boxcenter.z;
+	v0.x = a.x - boxcenter.x; v0.y = a.y - boxcenter.y; v0.z = a.z - boxcenter.z;
+	v1.x = b.x - boxcenter.x; v1.y = b.y - boxcenter.y; v1.z = b.z - boxcenter.z;
+	v2.x = c.x - boxcenter.x; v2.y = c.y - boxcenter.y; v2.z = c.z - boxcenter.z;
 	/* compute triangle edges */
 	e0.x = v1.x - v0.x; e0.y = v1.y - v0.y; e0.z = v1.z - v0.z;
 	e1.x = v2.x - v1.x; e1.y = v2.y - v1.y; e1.z = v2.z - v1.z;

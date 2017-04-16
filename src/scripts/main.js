@@ -24,6 +24,7 @@ assets.load(function() {
 			spawnTexture: { value: 0 },
 			raymarchingTexture: { value: 0 },
 			panoramaTexture: { value: assets.textures.panorama },
+			meshTexture: { value: assets.textures.male },
 			resolution: { value: new THREE.Vector2() },
 			eye: { value: 0 },
 			front: { value: 0 },
@@ -63,7 +64,11 @@ assets.load(function() {
 		frameBufferScene = new FrameBuffer();
 
 		// particles
-		particles = new Particles(assets.geometries["cookie"].attributes);
+		// particles = new Particles(assets.geometries["cookie"].attributes);
+		var geo = assets.geometries.male.children[0].geometry;
+		// sceneBuffer.add(new THREE.Mesh(geo, new THREE.MeshNormalMaterial()));
+
+		particles = new Particles(voxelize(geo,0,100.));
 		sceneBuffer.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["particle.vert"],
@@ -102,7 +107,7 @@ assets.load(function() {
 		uniforms.velocityTexture.value = velocityPass.update();
 		uniforms.positionTexture.value = positionPass.update();
 		uniforms.feedbackTexture.value = feedbackPass.update();
-		uniforms.raymarchingTexture.value = raymarchingPass.update();
+		// uniforms.raymarchingTexture.value = raymarchingPass.update();
 		uniforms.sceneTexture.value = frameBufferScene.getTexture();
 		renderer.render( sceneBuffer, camera, frameBufferScene.getTarget(), true );
 		renderer.render( scene, camera );

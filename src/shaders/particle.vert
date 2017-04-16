@@ -1,8 +1,10 @@
 
 attribute vec3 color;
-attribute vec2 texcoord;
 attribute vec2 anchor;
+attribute vec2 texcoord;
+attribute vec2 uvMesh;
 varying vec2 vTexcoord;
+varying vec2 vUVMesh;
 varying vec2 vAnchor;
 varying vec2 vScreenUV;
 varying vec3 vColor;
@@ -17,6 +19,7 @@ uniform float time;
 void main() {
 	vTexcoord = texcoord;
 	vAnchor = anchor;
+	vUVMesh = uvMesh;
 
 	vec3 pos = texture2D(positionTexture, vTexcoord).xyz;
 	vec3 col = texture2D(colorTexture, vTexcoord).xyz;
@@ -37,11 +40,12 @@ void main() {
 	vec3 tangent = normalize(cross(vec3(0,1,0), normal));
 	vec3 up = normalize(cross(tangent, normal));
 
-	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
+	// posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
 	vViewDir = posWorld.xyz - cameraPosition;
 
 
 	gl_Position = projectionMatrix * viewMatrix * posWorld;
+	gl_Position.xy += anchor * 0.01;// * fade;
+
 	vScreenUV = (gl_Position.xy/gl_Position.w) * 0.5 + 0.5;
-	// gl_Position.xy += anchor * 0.025;// * fade;
 }

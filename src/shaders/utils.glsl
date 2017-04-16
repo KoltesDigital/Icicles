@@ -4,6 +4,20 @@
 #define HALFPI 1.5707963267948966192313216916398
 #define HALF3PI 4.7123889803846898576939650749194
 
+// mercury
+float pModPolar(inout vec2 p, float repetitions) {
+	float angle = 2.*PI/repetitions;
+	float a = atan(p.y, p.x) + angle/2.;
+	float r = length(p);
+	float c = floor(a/angle);
+	a = mod(a,angle) - angle/2.;
+	p = vec2(cos(a), sin(a))*r;
+	// For an odd number of repetitions, fix cell index of the cell in -x direction
+	// (cell index would be e.g. -5 and 5 in the two halves of the cell):
+	if (abs(c) >= (repetitions/2.)) c = abs(c);
+	return c;
+}
+
 float colorDistance (vec4 a, vec4 b) {
   return (abs(a.r-b.r)+abs(a.g-b.g)+abs(a.b-b.b))/3.0;
 }
