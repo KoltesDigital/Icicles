@@ -17,6 +17,7 @@ assets.load(function() {
 			velocityTexture: { value: 0 },
 			feedbackTexture: { value: 0 },
 			colorTexture: { value: 0 },
+			normalTexture: { value: 0 },
 			spawnTexture: { value: 0 },
 			resolution: { value: new THREE.Vector2() }
 		};
@@ -59,6 +60,7 @@ assets.load(function() {
 
 		uniforms.spawnTexture.value = particles.spawnTexture;
 		uniforms.colorTexture.value = particles.colorTexture;
+		uniforms.normalTexture.value = particles.normalTexture;
 
 		positionPass = new Pass(assets.shaders['position.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
 		velocityPass = new Pass(assets.shaders['velocity.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);

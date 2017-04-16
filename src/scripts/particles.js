@@ -74,9 +74,9 @@ function Particles (attributes)
 		indexAnchor += 6;
 	}
 
-	this.spawnTexture = new THREE.DataTexture( dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
-	this.colorTexture = new THREE.DataTexture( dataColor, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
-	this.normalTexture = new THREE.DataTexture( dataNormal, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
+	this.spawnTexture = new THREE.DataTexture(dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
+	this.colorTexture = new THREE.DataTexture(dataColor, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
+	this.normalTexture = new THREE.DataTexture(dataNormal, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
 	this.spawnTexture.needsUpdate = true;
 	this.colorTexture.needsUpdate = true;
 	this.normalTexture.needsUpdate = true;
