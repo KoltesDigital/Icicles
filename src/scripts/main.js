@@ -31,7 +31,7 @@ assets.load(function() {
 		onWindowResize();
 		window.addEventListener( 'resize', onWindowResize, false );
 
-		camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 3500 );
+		camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.001, 3500 );
 		camera.position.z = 10;
 		scene = new THREE.Scene();
 
