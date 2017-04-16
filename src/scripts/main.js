@@ -21,6 +21,7 @@ assets.load(function() {
 			colorTexture: { value: 0 },
 			normalTexture: { value: 0 },
 			spawnTexture: { value: 0 },
+			panoramaTexture: { value: assets.textures.panorama },
 			resolution: { value: new THREE.Vector2() }
 		};
 

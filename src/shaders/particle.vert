@@ -5,6 +5,8 @@ attribute vec2 anchor;
 varying vec2 vTexcoord;
 varying vec2 vAnchor;
 varying vec3 vColor;
+varying vec3 vNormal;
+varying vec3 vViewDir;
 uniform sampler2D spawnTexture;
 uniform sampler2D colorTexture;
 uniform sampler2D positionTexture;
@@ -26,6 +28,7 @@ void main() {
 	vColor = col;
 	// vColor = vec3(vTexcoord.xy,0);
 	// vColor = normal * 0.5 + 0.5;
+	vNormal = (modelMatrix * vec4(normal,0)).xyz;
 
 	float fade = smoothstep(0.0, 0.1, velocity.w) * (1. - smoothstep(0.9, 1.0, velocity.w));
 	fade = mix(fade, 1., step(1., velocity.w));
@@ -34,6 +37,7 @@ void main() {
 	vec3 up = normalize(cross(tangent, normal));
 
 	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
+	vViewDir = posWorld.xyz - cameraPosition;
 
 	gl_Position = projectionMatrix * viewMatrix * posWorld;
 	// gl_Position.xy += anchor * 0.025;// * fade;

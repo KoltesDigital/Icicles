@@ -3,9 +3,7 @@
 var plyLoader = new THREE.PLYLoader();
 
 var textureDescriptors = {
-	// 'ground': {
-	// 	src: "images/ground.jpg",
-	// },
+	'panorama': "images/Room.jpg"
 };
 
 var meshDescriptors = {
@@ -50,13 +48,15 @@ function load(callback) {
 var assets = {
 	// 'actions': new blenderHTML5Animations.ActionLibrary(actionsDescriptor),
 	'load': load,
-	'geometries': {}
+	'geometries': {},
+	'textures': {}
 };
 
 function notify() {
-	isLoaded = assets.shaders && Object.keys(assets.geometries).length == Object.keys(geometryDescriptors).length;
+	isLoaded = assets.shaders 
+	&& Object.keys(assets.textures).length == Object.keys(textureDescriptors).length 
+	&& Object.keys(assets.geometries).length == Object.keys(geometryDescriptors).length;
 	// && assets.meshes;
-	// && assets.textures 
 
 	if (isLoaded) {
 		return pendingCallbacks.forEach(function(callback) {
@@ -103,12 +103,14 @@ loadFiles(shaderURLs, function (err, files) {
 	return notify();
 });
 
-// twgl.createTextures(gl, textureDescriptors, function(err, textures) {
-// 	if (err) throw err;
 
-// 	assets.textures = textures;
-// 	return notify();
-// });
+var textureLoader = new THREE.TextureLoader();
+Object.keys(textureDescriptors).forEach(function(name) {
+	textureLoader.load(textureDescriptors[name], function(texture) {
+		assets.textures[name] = texture;
+		return notify();
+	});
+});
 
 
 var meshURLs = [];

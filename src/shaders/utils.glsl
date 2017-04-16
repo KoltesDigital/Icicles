@@ -4,6 +4,10 @@
 #define HALFPI 1.5707963267948966192313216916398
 #define HALF3PI 4.7123889803846898576939650749194
 
+float colorDistance (vec4 a, vec4 b) {
+  return (abs(a.r-b.r)+abs(a.g-b.g)+abs(a.b-b.b))/3.0;
+}
+
 float luminance ( vec3 color )
 {
 	return (color.r + color.g + color.b) / 3.0;
