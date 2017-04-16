@@ -1,7 +1,8 @@
 
-var container, stats;
-var camera, scene, sceneBuffer, renderer;
-var uniforms, positionPass, velocityPass, particles, feedbackPass;
+var container, camera, scene, renderer, uniforms;
+var sceneBuffer, frameBufferScene;
+var positionPass, velocityPass, feedbackPass;
+var particles;
 
 assets.load(function() {
 
@@ -16,6 +17,7 @@ assets.load(function() {
 			positionTexture: { value: 0 },
 			velocityTexture: { value: 0 },
 			feedbackTexture: { value: 0 },
+			sceneTexture: { value: 0 },
 			colorTexture: { value: 0 },
 			normalTexture: { value: 0 },
 			spawnTexture: { value: 0 },
@@ -37,21 +39,21 @@ assets.load(function() {
 		scene = new THREE.Scene();
 
 		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		controls.addEventListener( 'change', render );
-		// controls.enableDamping = true;
-		// controls.dampingFactor = 0.02;
 		controls.rotateSpeed = 0.5;
 
 		// render
-		// scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), new THREE.ShaderMaterial( {
-		// 	uniforms: uniforms,
-		// 	vertexShader: assets.shaders['fullscreen.vert'],
-		// 	fragmentShader: assets.shaders['render.frag']
-		// })));
+		scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders['fullscreen.vert'],
+			fragmentShader: assets.shaders['render.frag']
+		})));
+
+		sceneBuffer = new THREE.Scene();
+		frameBufferScene = new FrameBuffer();
 
 		// particles
 		particles = new Particles(assets.geometries["cookie"].attributes);
-		scene.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
+		sceneBuffer.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["particle.vert"],
 			fragmentShader: assets.shaders["particle.frag"],
@@ -77,13 +79,15 @@ assets.load(function() {
 		requestAnimationFrame( animate );
 		controls.update();
 		uniforms.time.value += 0.05;
-		uniforms.velocityTexture.value = velocityPass.update();
-		uniforms.positionTexture.value = positionPass.update();
-		uniforms.feedbackTexture.value = feedbackPass.update();
 		render();
 	}
 
 	function render () {
+		uniforms.velocityTexture.value = velocityPass.update();
+		uniforms.positionTexture.value = positionPass.update();
+		uniforms.feedbackTexture.value = feedbackPass.update();
+		uniforms.sceneTexture.value = frameBufferScene.getTexture();
+		renderer.render( sceneBuffer, camera, frameBufferScene.getTarget(), true );
 		renderer.render( scene, camera );
 	}
 });

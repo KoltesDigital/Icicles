@@ -45,7 +45,7 @@ void main()	{
 	gl_FragColor.xyz  = buffer.xyz * 0.9 + (tornado + dir + noisey) * should + origin * (1. - should);// * step(1.0, length(spawn.xyz - position.xyz));
 
 	// spawning
-	float spawnOffset = rand(vUv) * 0.01 + 0.01;
+	float spawnOffset = rand(vUv) * 0.003 + 0.003;
 	gl_FragColor.w = mix(mod(buffer.w + spawnOffset, 1.0), -1.0, step(1.0, buffer.w + spawnOffset));
 	// gl_FragColor.w = mix(0.5, gl_FragColor.w, should);
 }
