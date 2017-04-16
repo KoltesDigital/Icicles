@@ -1,12 +1,10 @@
 
 function Particles (attributes)
 {
-	console.log(attributes);
 	var array = attributes.position.array;
 	var colors = attributes.color.array;
 	var normalArray = attributes.normal.array;
 	var dimension = closestPowerOfTwo(Math.sqrt(array.length / 3));
-	this.dimension = dimension;
 	var count = array.length / 3;
 	var resolution = dimension*dimension;
 	var x, y, z, ia, ib, ic, u, v, nx, ny, nz;
@@ -90,7 +88,6 @@ function Particles (attributes)
 	this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
 	if (attributes.uv != null) {
 		var uvArray = attributes.uv.array;
-		console.log(uvArray.length, texcoord.length);
 		var uvDataArray = new Float32Array(attributes.uv.array.length*3);
 		var indexVertex = 0;
 		for (var indexTri = 0; indexTri < uvArray.length; indexTri+=2) {
@@ -105,8 +102,26 @@ function Particles (attributes)
 			uvDataArray[indexVertex+5] = uvArray[indexTri+1];
 			indexVertex += 6;
 		}
-		console.log(uvArray.length, texcoord.length, uvDataArray.length);
 		this.geometry.addAttribute( 'uvMesh', new THREE.BufferAttribute( uvDataArray, 2 ) );
 	}
 	this.geometry.computeBoundingSphere();
+
+	this.mesh = new THREE.Mesh(this.geometry, new THREE.ShaderMaterial( {
+		uniforms: uniforms,
+		vertexShader: assets.shaders["particle.vert"],
+		fragmentShader: assets.shaders["particle.frag"],
+		side: THREE.DoubleSide
+	}));
+
+	this.positionPass = new Pass(assets.shaders['position.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+	this.velocityPass = new Pass(assets.shaders['velocity.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+
+	this.update = function ()
+	{
+		uniforms.spawnTexture.value = this.spawnTexture;
+		uniforms.colorTexture.value = this.colorTexture;
+		uniforms.normalTexture.value = this.normalTexture;
+		uniforms.velocityTexture.value = this.velocityPass.update();
+		uniforms.positionTexture.value = this.positionPass.update();
+	}
 }

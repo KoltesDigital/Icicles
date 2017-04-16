@@ -1,8 +1,8 @@
 
 var container, camera, scene, renderer, uniforms;
 var sceneBuffer, frameBufferScene;
-var positionPass, velocityPass, feedbackPass, raymarchingPass;
-var particles;
+var feedbackPass, raymarchingPass;
+var zebraParticles, duckParticles;
 
 assets.load(function() {
 
@@ -11,7 +11,6 @@ assets.load(function() {
 	var vectorRight, vectorUp;
 
 	function init() {
-
 		uniforms = {
 			time: { value: 1.0 },
 			frameBuffer: { value: 0 },
@@ -65,23 +64,17 @@ assets.load(function() {
 
 		// particles
 		// particles = new Particles(assets.geometries["cookie"].attributes);
-		var geo = assets.geometries.male.children[0].geometry;
-		// sceneBuffer.add(new THREE.Mesh(geo, new THREE.MeshNormalMaterial()));
+		var zebra = assets.geometries.zebra.children[0].geometry;
+		zebraParticles = new Particles(voxelize(zebra, assets.textures.zebra, 100.));
+		sceneBuffer.add(zebraParticles.mesh);
 
-		particles = new Particles(voxelize(geo,0,100.));
-		sceneBuffer.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
-			uniforms: uniforms,
-			vertexShader: assets.shaders["particle.vert"],
-			fragmentShader: assets.shaders["particle.frag"],
-			side: THREE.DoubleSide
-		})));
+		// var duck = assets.geometries.duck.children[0].geometry;
+		// duckParticles = new Particles(voxelize(duck,100.), assets.textures.duck);
+		// duckParticles.mesh.position.x = 4;
+		// sceneBuffer.add(duckParticles.mesh);
 
-		uniforms.spawnTexture.value = particles.spawnTexture;
-		uniforms.colorTexture.value = particles.colorTexture;
-		uniforms.normalTexture.value = particles.normalTexture;
+		uniforms.sceneTexture.value = frameBufferScene.getTexture();
 
-		positionPass = new Pass(assets.shaders['position.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
-		velocityPass = new Pass(assets.shaders['velocity.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
 		feedbackPass = new Pass(assets.shaders['feedback.frag']);
 		raymarchingPass = new Pass(assets.shaders['raymarching.frag']);
 	}
@@ -104,12 +97,12 @@ assets.load(function() {
 	}
 
 	function render () {
-		uniforms.velocityTexture.value = velocityPass.update();
-		uniforms.positionTexture.value = positionPass.update();
-		uniforms.feedbackTexture.value = feedbackPass.update();
 		// uniforms.raymarchingTexture.value = raymarchingPass.update();
-		uniforms.sceneTexture.value = frameBufferScene.getTexture();
 		renderer.render( sceneBuffer, camera, frameBufferScene.getTarget(), true );
+		zebraParticles.update();
+		// duckParticles.update();
+
+		uniforms.feedbackTexture.value = this.feedbackPass.update();
 		renderer.render( scene, camera );
 	}
 });

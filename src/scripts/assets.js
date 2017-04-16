@@ -2,8 +2,8 @@
 
 var textureDescriptors = {
 	'panorama': "images/Room.jpg",
-	'mallard': "images/mallard.png",
-	'male': "images/male.png",
+	'duck': "images/duck.png",
+	'zebra': "images/zebra.png",
 };
 
 var meshDescriptors = {
@@ -18,8 +18,8 @@ var meshDescriptors = {
 
 var geometryDescriptors = {
 	'cookie': 'meshes/Cookie.ply',
-	'mallard': 'meshes/mallard.obj',
-	'male': 'meshes/male.obj',
+	'duck': 'meshes/duck.obj',
+	'zebra': 'meshes/zebra.obj',
 };
 
 var shaderDescriptors = {

@@ -42,7 +42,7 @@ void main()	{
 
 	// apply
 	// spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
-	float should = smoothstep(0.3,0.7,mod(noiseIQ(seed) + time * 0.05,1.0));
+	float should = smoothstep(0.6,0.7,mod(noiseIQ(seed) + time * 0.05,1.0));
 	gl_FragColor.xyz  = buffer.xyz * 0.95 + (tornado + dir + noisey) * should + origin * (1. - should);
 
 	// spawning

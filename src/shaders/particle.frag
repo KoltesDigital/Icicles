@@ -33,13 +33,13 @@ void main()	{
 	// vec4 color = texture2D(panoramaTexture, uvPanorama);
 	// color = mix(vec4(vColor,1.), color, ratio1);
 
-	vec2 uv = vUVMesh;
+	// vec2 uv = vUVMesh;
 	// uv.y = 1.0 - uv.y;
-	vec4 mesh = texture2D(meshTexture, uv);
+	// vec4 mesh = texture2D(meshTexture, uv);
 
 	// vec4 raymarch = texture2D(raymarchingTexture, vScreenUV);
 	// color = mix(color, raymarch, ratio2);
-	gl_FragColor = mesh;
+	gl_FragColor = vec4(vColor,1.);
 
 	// float shade = dot(-viewDir, normal) * 0.5 + 0.5;
 	// gl_FragColor = raymarch;// * shade;

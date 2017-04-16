@@ -7,6 +7,13 @@ function Voxel (index, position, normal, color)
 	this.color = color;
 }
 
+function getColorAt(imageData, imageWidth, imageHeight, u, v)
+{
+	v = 1.0 - v;
+	var index = Math.floor(imageWidth*u) + Math.floor(imageWidth*Math.floor(v*imageHeight));
+	return [imageData[index*4]/255,imageData[index*4+1]/255,imageData[index*4+2]/255];
+}
+
 function voxelize (geometry, texture, scale)
 {
 	scale = scale || 1;
@@ -20,10 +27,18 @@ function voxelize (geometry, texture, scale)
 	var vertices = geometry.attributes.position.array;
 	var normals = geometry.attributes.normal.array;
 	var uvs = geometry.attributes.uv.array;
-	console.log(geometry);
 	var range = 512;
 	var triangleCount = vertices.length / 6;
 	var grid = [[],[],[],[],[],[],[],[]];
+
+
+	var img = texture.image;
+	var canvas = document.createElement('canvas');
+	var ctx = canvas.getContext('2d');
+	canvas.width  = img.width;
+	canvas.height = img.height;
+	ctx.drawImage(img, 0, 0);
+	var texData = ctx.getImageData(0, 0, img.width, img.height);
 
 	for (var tri = 0; tri < triangleCount; ++tri) {
 		var iax = tri*9;
@@ -82,7 +97,8 @@ function voxelize (geometry, texture, scale)
 						attributes.position.array.push(position.x, position.y, position.z);
 						attributes.uv.array.push(uvX, uvY);
 						attributes.normal.array.push(nX, nY, nZ);
-						attributes.color.array.push(1,1,1);
+						var color = getColorAt(texData.data, img.width, img.height, uvX, uvY);
+						attributes.color.array.push(color[0], color[1], color[2]);
 					}
 				}
 			}
