@@ -106,22 +106,37 @@ function Particles (attributes)
 	}
 	this.geometry.computeBoundingSphere();
 
+	this.uniforms = {
+		time: { value: 1.0 },
+		positionTexture: { value: 0 },
+		velocityTexture: { value: 0 },
+		feedbackTexture: { value: 0 },
+		frameBuffer: { value: 0 },
+		sceneTexture: { value: 0 },
+		colorTexture: { value: 0 },
+		normalTexture: { value: 0 },
+		spawnTexture: { value: 0 },
+		raymarchingTexture: { value: 0 },
+		panoramaTexture: { value: assets.textures.panorama }
+	};
+
 	this.mesh = new THREE.Mesh(this.geometry, new THREE.ShaderMaterial( {
-		uniforms: uniforms,
+		uniforms: this.uniforms,
 		vertexShader: assets.shaders["particle.vert"],
 		fragmentShader: assets.shaders["particle.frag"],
 		side: THREE.DoubleSide
 	}));
 
-	this.positionPass = new Pass(assets.shaders['position.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
-	this.velocityPass = new Pass(assets.shaders['velocity.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+	this.positionPass = new Pass(assets.shaders['position.frag'], this.uniforms, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+	this.velocityPass = new Pass(assets.shaders['velocity.frag'], this.uniforms, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 
 	this.update = function ()
 	{
-		uniforms.spawnTexture.value = this.spawnTexture;
-		uniforms.colorTexture.value = this.colorTexture;
-		uniforms.normalTexture.value = this.normalTexture;
-		uniforms.velocityTexture.value = this.velocityPass.update();
-		uniforms.positionTexture.value = this.positionPass.update();
+		this.uniforms.time.value += 0.05;
+		this.uniforms.spawnTexture.value = this.spawnTexture;
+		this.uniforms.colorTexture.value = this.colorTexture;
+		this.uniforms.normalTexture.value = this.normalTexture;
+		this.uniforms.velocityTexture.value = this.velocityPass.update();
+		this.uniforms.positionTexture.value = this.positionPass.update();
 	}
 }

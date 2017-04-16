@@ -1,5 +1,5 @@
 
-function Pass (shader, width, height, format, type)
+function Pass (shader, passUniforms, width, height, format, type)
 {
 	width = width || window.innerWidth;
 	height = height || window.innerHeight;
@@ -10,15 +10,16 @@ function Pass (shader, width, height, format, type)
 	this.geometry = new THREE.PlaneBufferGeometry( 2, 2 );
 	this.camera = new THREE.Camera();
 	this.camera.position.z = 1;
+	this.uniforms = passUniforms;
 	this.scene.add( new THREE.Mesh( this.geometry, new THREE.ShaderMaterial( {
-		uniforms: uniforms,
+		uniforms: this.uniforms,
 		vertexShader: assets.shaders['fullscreen.vert'],
 		fragmentShader: shader
 	})));
 
 	this.update = function ()
 	{
-		uniforms.frameBuffer.value = this.frameBuffer.getTexture();
+		this.uniforms.frameBuffer.value = this.frameBuffer.getTexture();
 		this.frameBuffer.swap();
 		renderer.render(this.scene, this.camera, this.frameBuffer.getTarget(), true);
 		return this.frameBuffer.getTexture();

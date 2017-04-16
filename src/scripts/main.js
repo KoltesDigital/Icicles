@@ -66,17 +66,18 @@ assets.load(function() {
 		// particles = new Particles(assets.geometries["cookie"].attributes);
 		var zebra = assets.geometries.zebra.children[0].geometry;
 		zebraParticles = new Particles(voxelize(zebra, assets.textures.zebra, 100.));
+		zebraParticles.mesh.position.x = -1;
 		sceneBuffer.add(zebraParticles.mesh);
 
-		// var duck = assets.geometries.duck.children[0].geometry;
-		// duckParticles = new Particles(voxelize(duck,100.), assets.textures.duck);
-		// duckParticles.mesh.position.x = 4;
-		// sceneBuffer.add(duckParticles.mesh);
+		var duck = assets.geometries.duck.children[0].geometry;
+		duckParticles = new Particles(voxelize(duck, assets.textures.duck, 100.));
+		duckParticles.mesh.position.x = 1;
+		sceneBuffer.add(duckParticles.mesh);
 
 		uniforms.sceneTexture.value = frameBufferScene.getTexture();
 
-		feedbackPass = new Pass(assets.shaders['feedback.frag']);
-		raymarchingPass = new Pass(assets.shaders['raymarching.frag']);
+		feedbackPass = new Pass(assets.shaders['feedback.frag'], uniforms);
+		raymarchingPass = new Pass(assets.shaders['raymarching.frag'], uniforms);
 	}
 
 	function onWindowResize( event ) {
@@ -100,7 +101,7 @@ assets.load(function() {
 		// uniforms.raymarchingTexture.value = raymarchingPass.update();
 		renderer.render( sceneBuffer, camera, frameBufferScene.getTarget(), true );
 		zebraParticles.update();
-		// duckParticles.update();
+		duckParticles.update();
 
 		uniforms.feedbackTexture.value = this.feedbackPass.update();
 		renderer.render( scene, camera );
