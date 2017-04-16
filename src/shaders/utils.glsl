@@ -122,6 +122,18 @@ vec3 rotateZ(vec3 p, float angle)
 
 
 
+float reflectance(vec3 a, vec3 b) { return dot(normalize(a), normalize(b)) * 0.5 + 0.5; }
+vec2 kaelidoGrid(vec2 p) { return vec2(step(mod(p, 2.0), vec2(1.0))); }
+
+float sphere( vec3 p, float s ) { return length(p)-s; }
+
+float sdBox( vec3 p, vec3 b ) {
+  vec3 d = abs(p) - b;
+  return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
+}
+
+
+
 vec2 lightDirection (sampler2D bitmap, vec2 uv, vec2 dimension)
 { 
   vec2 force = vec2(0.0, 0.0);

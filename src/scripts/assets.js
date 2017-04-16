@@ -28,6 +28,7 @@ var shaderDescriptors = {
 	'position.frag': 'position.frag',
 	'velocity.frag': 'velocity.frag',
 	'feedback.frag': 'feedback.frag',
+	'raymarching.frag': 'raymarching.frag',
 };
 
 var shaderBaseURL = 'shaders/';

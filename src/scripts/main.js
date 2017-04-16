@@ -1,7 +1,7 @@
 
 var container, camera, scene, renderer, uniforms;
 var sceneBuffer, frameBufferScene;
-var positionPass, velocityPass, feedbackPass;
+var positionPass, velocityPass, feedbackPass, raymarchingPass;
 var particles;
 
 assets.load(function() {
@@ -21,6 +21,7 @@ assets.load(function() {
 			colorTexture: { value: 0 },
 			normalTexture: { value: 0 },
 			spawnTexture: { value: 0 },
+			raymarchingTexture: { value: 0 },
 			panoramaTexture: { value: assets.textures.panorama },
 			resolution: { value: new THREE.Vector2() }
 		};
@@ -35,8 +36,9 @@ assets.load(function() {
 		onWindowResize();
 		window.addEventListener( 'resize', onWindowResize, false );
 
-		camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.001, 3500 );
-		camera.position.z = 10;
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.001, 3500 );
+		camera.position.z = 2;
+		camera.position.y = 1;
 		scene = new THREE.Scene();
 
 		controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -68,6 +70,7 @@ assets.load(function() {
 		positionPass = new Pass(assets.shaders['position.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
 		velocityPass = new Pass(assets.shaders['velocity.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
 		feedbackPass = new Pass(assets.shaders['feedback.frag']);
+		raymarchingPass = new Pass(assets.shaders['raymarching.frag']);
 	}
 
 	function onWindowResize( event ) {
@@ -87,6 +90,7 @@ assets.load(function() {
 		uniforms.velocityTexture.value = velocityPass.update();
 		uniforms.positionTexture.value = positionPass.update();
 		uniforms.feedbackTexture.value = feedbackPass.update();
+		uniforms.raymarchingTexture.value = raymarchingPass.update();
 		uniforms.sceneTexture.value = frameBufferScene.getTexture();
 		renderer.render( sceneBuffer, camera, frameBufferScene.getTarget(), true );
 		renderer.render( scene, camera );

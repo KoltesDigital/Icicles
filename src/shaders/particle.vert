@@ -4,6 +4,7 @@ attribute vec2 texcoord;
 attribute vec2 anchor;
 varying vec2 vTexcoord;
 varying vec2 vAnchor;
+varying vec2 vScreenUV;
 varying vec3 vColor;
 varying vec3 vNormal;
 varying vec3 vViewDir;
@@ -39,6 +40,8 @@ void main() {
 	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
 	vViewDir = posWorld.xyz - cameraPosition;
 
+
 	gl_Position = projectionMatrix * viewMatrix * posWorld;
+	vScreenUV = (gl_Position.xy/gl_Position.w) * 0.5 + 0.5;
 	// gl_Position.xy += anchor * 0.025;// * fade;
 }
