@@ -7,50 +7,46 @@ function Particles (attributes)
 	var dimension = closestPowerOfTwo(Math.sqrt(array.length / 3));
 	// var dimension = Math.floor(array.length / 3);
 	// var dimension = 512;
-	var count = Math.ceil(dimension*dimension);
-	console.log(array.length/3);
-	console.log(dimension);
-	console.log(count);
+	var count = array.length / 3;
+	var resolution = dimension*dimension;
 	var vertices = new Float32Array(count * 3 * 3);
-	var x, y, z, r, g, b;
-	var triangleIndex = 0;
-	var dataPosition = new Float32Array(count * 3 * 3);
-	var dataColor = new Float32Array(count * 3 * 3);
+	var x, y, z, ia, ib, ic;
+	var dataPosition = new Float32Array(resolution * 3);
+	var dataColor = new Float32Array(resolution * 3);
 
 	var indexVertex = 0;
 
 	// Triangles
-	for (var i = 0; i < count; i++) {
+	for (var triangleIndex = 0; triangleIndex < count; triangleIndex++) {
 
-		x = array[triangleIndex];
-		y = array[triangleIndex+1];
-		z = array[triangleIndex+2];
-		r = colors[triangleIndex];
-		g = colors[triangleIndex+1];
-		b = colors[triangleIndex+2];
+		// var indexRatio = triangleIndex / count
+		ia = triangleIndex*3;
+		ib = triangleIndex*3+1;
+		ic = triangleIndex*3+2;
+
+		x = array[ia];
+		y = array[ib];
+		z = array[ic];
+
+    dataPosition[ia] = x;
+    dataPosition[ib] = y;
+    dataPosition[ic] = z;
+    dataColor[ia] = colors[ia];
+    dataColor[ib] = colors[ib];
+    dataColor[ic] = colors[ic];
 
 		for (var tri = 0; tri < 3; ++tri) {
-			var ia = indexVertex;
-			var ib = indexVertex+1;
-			var ic = indexVertex+2;
-			vertices[ia] = x;
-			vertices[ib] = y;
-			vertices[ic] = z;
-	    dataPosition[ia] = x;
-	    dataPosition[ib] = y;
-	    dataPosition[ic] = z;
-	    dataColor[ia] = r;
-	    dataColor[ib] = g;
-	    dataColor[ic] = b;
-
+			vertices[indexVertex] = x;
+			vertices[indexVertex+1] = y;
+			vertices[indexVertex+2] = z;
 	    indexVertex += 3;
 		}
-
-		triangleIndex += 3;
 	}
 
-	this.dataTexture = new THREE.DataTexture( dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
-	this.dataTexture.needsUpdate = true;
+	this.spawnTexture = new THREE.DataTexture( dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
+	this.spawnTexture.needsUpdate = true;
+	this.colorTexture = new THREE.DataTexture( dataColor, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
+	this.colorTexture.needsUpdate = true;
 
 	// UV
 	var anchor = new Float32Array(count * 3 * 2);
@@ -80,7 +76,6 @@ function Particles (attributes)
 	}
 
 	this.geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-	this.geometry.addAttribute( 'color', new THREE.BufferAttribute( dataColor, 3 ) );
 	this.geometry.addAttribute( 'anchor', new THREE.BufferAttribute( anchor, 2 ) );
 	this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
 	this.geometry.computeBoundingSphere();
