@@ -45,10 +45,7 @@ assets.load(function() {
 		// 	fragmentShader: assets.shaders["particle.frag"],
 		// 	side: THREE.DoubleSide
 		// })));
-		console.log(assets.geometries["cookie"]);
-		// particles = new Particles([assets.geometries["cookie"].attributes.position.array]);
-		var aa = assets.geometries["cookie"].attributes.position.array;
-		particles = new Particles(aa);
+		particles = new Particles(assets.geometries["cookie"].attributes);
 		uniforms.spawnTexture.value = particles.dataTexture;
 		scene.add(new THREE.Mesh(particles.geometry, new THREE.ShaderMaterial( {
 				uniforms: uniforms,
