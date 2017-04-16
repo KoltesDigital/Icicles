@@ -69,17 +69,19 @@ function voxelize (geometry, texture, scale)
 						var uvAX = uvs[tri*6]; var uvAY = uvs[tri*6+1];
 						var uvBX = uvs[tri*6+2]; var uvBY = uvs[tri*6+3];
 						var uvCX = uvs[tri*6+4]; var uvCY = uvs[tri*6+5];
-						// var uvX = (uvAX*areaA + uvBX*areaB + uvCX*areaC)/3;
-						// var uvY = (uvAY*areaA + uvBY*areaB + uvCY*areaC)/3;
 						var uvX = lerp(lerp(uvAX, uvBX, areaB), uvCX, areaC);
 						var uvY = lerp(lerp(uvAY, uvBY, areaB), uvCY, areaC);
-						// voxelList.push(new Voxel(voxelIndex, gridPosition.multiplyScalar(scale), new THREE.Vector3(0,1,0), new THREE.Color(255,0,0)));
+						var normalAX = normals[tri*9+0]; var normalAY = normals[tri*9+1]; var normalAZ = normals[tri*9+1];
+						var normalBX = normals[tri*9+2]; var normalBY = normals[tri*9+3]; var normalBZ = normals[tri*9+3];
+						var normalCX = normals[tri*9+6]; var normalCY = normals[tri*9+7]; var normalCZ = normals[tri*9+8];
+						var nX = lerp(lerp(normalAX, normalBX, areaB), normalCX, areaC);
+						var nY = lerp(lerp(normalAY, normalBY, areaB), normalCY, areaC);
+						var nZ = lerp(lerp(normalAY, normalBY, areaB), normalCY, areaC);
 						var position = new THREE.Vector3(gridPosition.x, gridPosition.y, gridPosition.z);
 						position.divideScalar(scale);
 						attributes.position.array.push(position.x, position.y, position.z);
-						// attributes.uv.array.push(uvs[tri*6],uvs[tri*6+1]);
 						attributes.uv.array.push(uvX, uvY);
-						attributes.normal.array.push(0, 1, 0);
+						attributes.normal.array.push(nX, nY, nZ);
 						attributes.color.array.push(1,1,1);
 					}
 				}

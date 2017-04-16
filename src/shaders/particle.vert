@@ -28,6 +28,7 @@ void main() {
 	
 	vec3 viewDir = normalize(posWorld.xyz - cameraPosition.xyz);
 	vec4 velocity = texture2D(velocityTexture, vTexcoord);
+	float magnitude = length(velocity.xyz);
 	// vColor = normalize(velocity.xyz) * 0.5 + 0.5;
 	vColor = col;
 	// vColor = vec3(vTexcoord.xy,0);
@@ -37,15 +38,27 @@ void main() {
 	float fade = smoothstep(0.0, 0.1, velocity.w) * (1. - smoothstep(0.9, 1.0, velocity.w));
 	fade = mix(fade, 1., step(1., velocity.w));
 
+	float stretch = (1.+magnitude*100.);
+
+	// world space
 	vec3 tangent = normalize(cross(vec3(0,1,0), normal));
 	vec3 up = normalize(cross(tangent, normal));
 
-	// posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
+	float moving = step(0.01, magnitude);
+	// velocity space
+	vec3 e = vec3(0.00001);
+	tangent = mix(tangent, normalize(cross(normalize(velocity.xyz + e), normal)), moving);
+	up = mix(up, normalize(velocity.xyz + e)*stretch, moving);
+
+	float size = 0.01 + magnitude;
+	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * size * fade;
+
 	vViewDir = posWorld.xyz - cameraPosition;
 
-
 	gl_Position = projectionMatrix * viewMatrix * posWorld;
-	gl_Position.xy += anchor * 0.01;// * fade;
+
+	// screen space
+	// gl_Position.xy += anchor * size;// * fade;
 
 	vScreenUV = (gl_Position.xy/gl_Position.w) * 0.5 + 0.5;
 }
