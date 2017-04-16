@@ -14,13 +14,15 @@ uniform float time;
 void main()	{
 	if (length(vAnchor) > 0.5) discard;
 
-	float ratio = sin(time*0.2)*0.5+0.5;
-	float ratio1 = smoothstep(0.33, 0.66, ratio);
-	float ratio2 = smoothstep(0.66, 1.0, ratio);
+	float ratio = sin(time*0.1)*0.5+0.5;
+	float ratio1 = smoothstep(0.25, 0.5, ratio);
+	float ratio2 = smoothstep(0.75, 1.0, ratio);
+
+	vec3 normal = normalize(vNormal);
 
 	// Convert to Spherical Coordinates
 	vec3 viewDir = normalize(vViewDir);
-	vec3 sphere_pnt = mix(cross(viewDir, normalize(vNormal)), viewDir, ratio1);
+	vec3 sphere_pnt = mix(cross(viewDir, normal), viewDir, ratio1);
 	sphere_pnt = rotateX(sphere_pnt, -PI/2.);
 	float r = length(sphere_pnt);
 	float lon = atan(sphere_pnt.y, sphere_pnt.x);
@@ -31,5 +33,7 @@ void main()	{
 
 	vec4 raymarch = texture2D(raymarchingTexture, vScreenUV);
 	color = mix(color, raymarch, ratio2);
-	gl_FragColor = color;
+	// gl_FragColor = color;
+	float shade = dot(-viewDir, normal) * 0.5 + 0.5;
+	gl_FragColor = raymarch * shade;
 }

@@ -7,6 +7,6 @@ uniform sampler2D raymarchingTexture;
 uniform sampler2D sceneTexture;
 
 void main()	{
-	vec4 color = abs(texture2D(feedbackTexture, vUv));
+	vec4 color = texture2D(feedbackTexture, vUv);
 	gl_FragColor = color;
 }

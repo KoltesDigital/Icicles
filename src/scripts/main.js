@@ -8,6 +8,7 @@ assets.load(function() {
 
 	init();
 	animate();
+	var vectorRight, vectorUp;
 
 	function init() {
 
@@ -23,7 +24,11 @@ assets.load(function() {
 			spawnTexture: { value: 0 },
 			raymarchingTexture: { value: 0 },
 			panoramaTexture: { value: assets.textures.panorama },
-			resolution: { value: new THREE.Vector2() }
+			resolution: { value: new THREE.Vector2() },
+			eye: { value: 0 },
+			front: { value: 0 },
+			right: { value: 0 },
+			up: { value: 0 }
 		};
 
 		container = document.getElementById( 'container' );
@@ -40,6 +45,9 @@ assets.load(function() {
 		camera.position.z = 2;
 		camera.position.y = 1;
 		scene = new THREE.Scene();
+
+		vectorRight = new THREE.Vector3( 1, 0, 0 );
+		vectorUp = new THREE.Vector3( 0, 1, 0 );
 
 		controls = new THREE.OrbitControls( camera, renderer.domElement );
 		controls.rotateSpeed = 0.5;
@@ -83,6 +91,10 @@ assets.load(function() {
 		requestAnimationFrame( animate );
 		controls.update();
 		uniforms.time.value += 0.05;
+		uniforms.eye.value = camera.position;
+		uniforms.front.value = camera.getWorldDirection().normalize();
+		uniforms.right.value = vectorRight.set(1,0,0).applyMatrix4( camera.matrixWorld ).sub( camera.position ).normalize();
+		uniforms.up.value = vectorUp.set(0,1,0).applyMatrix4( camera.matrixWorld ).sub( camera.position ).normalize();
 		render();
 	}
 

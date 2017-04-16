@@ -5,6 +5,7 @@ uniform float time;
 uniform sampler2D frameBuffer;
 uniform sampler2D spawnTexture;
 uniform sampler2D velocityTexture;
+uniform mat4 cameraMatrix;
 
 // Raymarching
 const float rayEpsilon = 0.001;
@@ -13,10 +14,12 @@ const float rayMax = 1000.0;
 const int rayCount = 64;
 
 // Camera
-vec3 eye = vec3(0, 0, -1.5);
-vec3 front = vec3(0, 0, 1);
-vec3 right = vec3(1, 0, 0);
-vec3 up = vec3(0, 1, 0);
+uniform vec3 eye;
+uniform vec3 front;
+uniform vec3 right;
+uniform vec3 up;
+// vec3 right = vec3(1, 0, 0);
+// vec3 up = vec3(0, 1, 0);
 
 // Colors
 vec3 lightColor = vec3(1.0, 1.0, 1.0);
@@ -24,25 +27,30 @@ vec3 skyColor = vec3(0, 0, 0.1);
 vec3 shadowColor = vec3(0, 0, 0);
 
 void main()	{
-	
+
 	// Ray from UV
 	vec2 uv = vUv.xy * 2.0 - 1.0;
 	uv.x *= resolution.x / resolution.y;
 	vec3 ray = normalize(front + right * uv.x + up * uv.y);
-	
+
 	// Color
 	vec3 color = skyColor;
-	
+	vec3 gridSize = vec3(1.0);
+
+	// right = cross(normalize(front), up);
+
 	// Raymarching
 	float t = 0.0;
 	for (int r = 0; r < rayCount; ++r)
 	{
 		// Ray Position
 		vec3 p = eye + ray * t;
-		
+
 		// Distance to Sphere
-		float d = sphere(p, 0.5);
-		
+		// float d = sdBox(p, vec3(0.1));
+		p = mod(p, gridSize) - gridSize/2.;
+		float d = sphere(p, 0.2);
+
 		// Distance min or max reached
 		if (d < rayEpsilon || t > rayMax)
 		{
@@ -52,11 +60,11 @@ void main()	{
 			// color = mix(color, skyColor, smoothstep(rayMin, rayMax, t));
 			break;
 		}
-		
+
 		// Distance field step
 		t += d;
 	}
-	
+
 	// Hop
 	gl_FragColor = vec4(color, 1);
 }
