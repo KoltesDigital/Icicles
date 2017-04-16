@@ -32,7 +32,7 @@ assets.load(function() {
 		feedbackPass = new Pass(assets.shaders['feedback.frag']);
 
 		// render
-		// scene.add(new THREE.Mesh( geometry, new THREE.ShaderMaterial( {
+		// scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), new THREE.ShaderMaterial( {
 		// 	uniforms: uniforms,
 		// 	vertexShader: assets.shaders['fullscreen.vert'],
 		// 	fragmentShader: assets.shaders['render.frag']

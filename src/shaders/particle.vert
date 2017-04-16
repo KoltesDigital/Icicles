@@ -18,7 +18,8 @@ void main() {
 	
 	vec3 viewDir = normalize(posWorld.xyz - cameraPosition.xyz);
 	vec4 velocity = texture2D(velocityTexture, vTexcoord);
-	vColor = normalize(velocity.xyz) * 0.5 + 0.5;
+	// vColor = normalize(velocity.xyz) * 0.5 + 0.5;
+	vColor = color;
 
 	float fade = smoothstep(0.0, 0.1, velocity.w) * (1. - smoothstep(0.9, 1.0, velocity.w));
 

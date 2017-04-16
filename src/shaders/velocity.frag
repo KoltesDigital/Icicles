@@ -19,10 +19,10 @@ void main()	{
 	offset.xyz *= 0.1;
 	// buffer.xyz += normalize(buffer.xyz)*0.1;
 	//spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
-	float should = smoothstep(0.4,0.6,abs(noiseIQ(spawn.xyz*3.)));
+	float should = smoothstep(0.5,0.6,abs(noiseIQ(spawn.xyz*3.)));
 	// gl_FragColor.xyz = buffer.xyz * 0.95 + mix(vec3(0), offset, should);
 	buffer.xyz = buffer.xyz * 0.9;// + offset;
-	gl_FragColor.xyz = mix(buffer.xyz, buffer.xyz + offset, 0.5);
+	gl_FragColor.xyz = mix(buffer.xyz, buffer.xyz + offset * should, 0.5);
 	float spawnOffset = rand(vUv) * 0.01 + 0.001;
 	gl_FragColor.w = mix(mod(buffer.w + spawnOffset, 1.0), -1.0, step(1.0, buffer.w + spawnOffset));
 	// gl_FragColor.w = mod(buffer.w + spawnOffset, 1.0);

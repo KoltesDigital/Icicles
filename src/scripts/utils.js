@@ -1,7 +1,7 @@
 
 // Find the closest power of 2
-function closestPowerOfTwo (x) {
-		return Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
+function closestPowerOfTwo (num) {
+		return Math.pow(2, Math.floor(Math.log(num) / Math.log(2)));
 }
 
 // Used to calculate length of vector from center of box to corner of box

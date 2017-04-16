@@ -4,43 +4,49 @@ function Particles (attributes)
 	var array = attributes.position.array;
 	var colors = attributes.color.array;
 	this.geometry = new THREE.BufferGeometry();
-	// var dimension = closestPowerOfTwo(Math.floor(array.length / 3));
-	// var dimension = Math.sqrt(Math.floor(array.length / 3));
-	var dimension = 512;
-	var count = dimension*dimension;
-	console.log(array.length);
+	var dimension = closestPowerOfTwo(Math.sqrt(array.length / 3));
+	// var dimension = Math.floor(array.length / 3);
+	// var dimension = 512;
+	var count = Math.ceil(dimension*dimension);
+	console.log(array.length/3);
+	console.log(dimension);
 	console.log(count);
 	var vertices = new Float32Array(count * 3 * 3);
-	var x, y, z;
+	var x, y, z, r, g, b;
 	var triangleIndex = 0;
 	var dataPosition = new Float32Array(count * 3 * 3);
 	var dataColor = new Float32Array(count * 3 * 3);
 
+	var indexVertex = 0;
+
 	// Triangles
-	for (var i = 0; i+8 < count; i+=9) {
+	for (var i = 0; i < count; i++) {
 
-		x = array[triangleIndex*3+0];
-		y = array[triangleIndex*3+1];
-		z = array[triangleIndex*3+2];
-
-    // dataColor[i+0] = x;
-    // dataColor[i+1] = y;
-    // dataColor[i+2] = z;
+		x = array[triangleIndex];
+		y = array[triangleIndex+1];
+		z = array[triangleIndex+2];
+		r = colors[triangleIndex];
+		g = colors[triangleIndex+1];
+		b = colors[triangleIndex+2];
 
 		for (var tri = 0; tri < 3; ++tri) {
-			var ia = i+tri*3;
-			var ib = i+tri*3+1;
-			var ic = i+tri*3+2;
+			var ia = indexVertex;
+			var ib = indexVertex+1;
+			var ic = indexVertex+2;
 			vertices[ia] = x;
 			vertices[ib] = y;
 			vertices[ic] = z;
-
 	    dataPosition[ia] = x;
 	    dataPosition[ib] = y;
 	    dataPosition[ic] = z;
+	    dataColor[ia] = r;
+	    dataColor[ib] = g;
+	    dataColor[ic] = b;
+
+	    indexVertex += 3;
 		}
 
-		++triangleIndex;
+		triangleIndex += 3;
 	}
 
 	this.dataTexture = new THREE.DataTexture( dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
@@ -74,7 +80,7 @@ function Particles (attributes)
 	}
 
 	this.geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-	// this.geometry.addAttribute( 'color', new THREE.BufferAttribute( dataColor, 3 ) );
+	this.geometry.addAttribute( 'color', new THREE.BufferAttribute( dataColor, 3 ) );
 	this.geometry.addAttribute( 'anchor', new THREE.BufferAttribute( anchor, 2 ) );
 	this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
 	this.geometry.computeBoundingSphere();
