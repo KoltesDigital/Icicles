@@ -1,16 +1,7 @@
 
 // Find the closest power of 2
-function closestPowerOfTwo (number) {
-    var n = number;
-    n+=(n==0);
-    n--;
-    n|=n>>1;
-    n|=n>>2;
-    n|=n>>4;
-    n|=n>>8;
-    n|=n>>16;
-    n++;
-    return Math.sqrt(n);
+function closestPowerOfTwo (x) {
+		return Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 }
 
 // Used to calculate length of vector from center of box to corner of box
