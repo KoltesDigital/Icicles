@@ -41,12 +41,6 @@ assets.load(function() {
 		// controls.dampingFactor = 0.02;
 		controls.rotateSpeed = 0.5;
 
-		var dimension = 128;
-
-		positionPass = new Pass(assets.shaders['position.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
-		velocityPass = new Pass(assets.shaders['velocity.frag'], dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
-		feedbackPass = new Pass(assets.shaders['feedback.frag']);
-
 		// render
 		// scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), new THREE.ShaderMaterial( {
 		// 	uniforms: uniforms,
@@ -65,6 +59,10 @@ assets.load(function() {
 
 		uniforms.spawnTexture.value = particles.spawnTexture;
 		uniforms.colorTexture.value = particles.colorTexture;
+
+		positionPass = new Pass(assets.shaders['position.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
+		velocityPass = new Pass(assets.shaders['velocity.frag'], particles.dimension, particles.dimension, THREE.RGBAFormat, THREE.FloatType);
+		feedbackPass = new Pass(assets.shaders['feedback.frag']);
 	}
 
 	function onWindowResize( event ) {

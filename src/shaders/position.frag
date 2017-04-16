@@ -15,5 +15,5 @@ void main()	{
 	// spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
 	float shouldRespawn = clamp(step(velocity.w, 0.0) + step(1.0, velocity.w),0.,1.);
 	gl_FragColor = mix(buffer, spawn, shouldRespawn);
-	gl_FragColor = spawn;
+	// gl_FragColor = spawn;
 }

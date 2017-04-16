@@ -5,6 +5,7 @@ function Particles (attributes)
 	var colors = attributes.color.array;
 	var normalArray = attributes.normal.array;
 	var dimension = closestPowerOfTwo(Math.sqrt(array.length / 3));
+	this.dimension = dimension;
 	var count = array.length / 3;
 	var resolution = dimension*dimension;
 	var x, y, z, ia, ib, ic, u, v, nx, ny, nz;

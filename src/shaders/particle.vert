@@ -15,7 +15,7 @@ void main() {
 	vTexcoord = texcoord;
 	vAnchor = anchor;
 
-	vec3 pos = position;//texture2D(positionTexture, vTexcoord).xyz;
+	vec3 pos = texture2D(positionTexture, vTexcoord).xyz;
 	vec3 col = texture2D(colorTexture, vTexcoord).xyz;
 	// pos = rotateX(rotateY(pos, time*0.2),time*0.1);
 	vec4 posWorld = modelMatrix * vec4( pos, 1.0 );
@@ -33,7 +33,7 @@ void main() {
 	vec3 tangent = normalize(cross(vec3(0,1,0), normal));
 	vec3 up = normalize(cross(tangent, normal));
 
-	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025;
+	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * 0.025 * fade;
 
 	gl_Position = projectionMatrix * viewMatrix * posWorld;
 	// gl_Position.xy += anchor * 0.025;// * fade;
