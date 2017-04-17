@@ -20,6 +20,7 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(TH
 		'cookie': 'meshes/Cookie.ply',
 		'duck': 'meshes/duck.obj',
 		'zebra': 'meshes/zebra.obj',
+		'test': 'meshes/test.obj',
 	};
 
 	var shaderDescriptors = {

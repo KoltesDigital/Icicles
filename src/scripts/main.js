@@ -1,5 +1,5 @@
-define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'engine/particles', 'engine/pass', 'utils/getTime'],
-	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, Particles, Pass, getTime) {
+define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'particles/particlesadvanced', 'engine/pass', 'utils/getTime'],
+	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, ParticlesAdvanced, Pass, getTime) {
 	"use strict";
 
 	var camera, scene, controls;
@@ -39,12 +39,12 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			// particles
 			// particles = new Particles(assets.geometries["cookie"].attributes);
 			var zebra = assets.geometries.zebra.children[0].geometry;
-			zebraParticles = new Particles(voxelize(zebra, assets.textures.zebra, 100.));
+			zebraParticles = new ParticlesAdvanced(voxelize(zebra, 100., 512, assets.textures.zebra));
 			zebraParticles.mesh.position.x = -1;
 			sceneBuffer.add(zebraParticles.mesh);
 
 			var duck = assets.geometries.duck.children[0].geometry;
-			duckParticles = new Particles(voxelize(duck, assets.textures.duck, 100.));
+			duckParticles = new ParticlesAdvanced(voxelize(duck, 100., 512, assets.textures.duck));
 			duckParticles.mesh.position.x = 1;
 			sceneBuffer.add(duckParticles.mesh);
 

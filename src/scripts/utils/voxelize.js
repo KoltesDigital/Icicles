@@ -6,14 +6,19 @@ define(['THREE', 'utils/utils'], function(THREE, utils){
 
 	function getColorAt(imageData, imageWidth, imageHeight, u, v)
 	{
-		v = 1.0 - v;
-		var index = Math.floor(imageWidth*u) + Math.floor(imageWidth*Math.floor(v*imageHeight));
-		return [imageData[index*4]/255,imageData[index*4+1]/255,imageData[index*4+2]/255];
+		if (imageData != null) {
+			v = 1.0 - v;
+			var index = Math.floor(imageWidth*u) + Math.floor(imageWidth*Math.floor(v*imageHeight));
+			return [imageData[index*4]/255,imageData[index*4+1]/255,imageData[index*4+2]/255];
+		} else {
+			return [1,1,0];
+		}
 	}
 
-	function voxelize (geometry, texture, scale)
+	function voxelize (geometry, scale, range, texture)
 	{
 		scale = scale || 1;
+		range = range || 512;
 		var attributes = {
 			position: { array: [] },
 			normal: { array: [] },
@@ -24,18 +29,19 @@ define(['THREE', 'utils/utils'], function(THREE, utils){
 		var vertices = geometry.attributes.position.array;
 		var normals = geometry.attributes.normal.array;
 		var uvs = geometry.attributes.uv.array;
-		var range = 512;
 		var triangleCount = vertices.length / 6;
 		var grid = [[],[],[],[],[],[],[],[]];
 
-
-		var img = texture.image;
-		var canvas = document.createElement('canvas');
-		var ctx = canvas.getContext('2d');
-		canvas.width  = img.width;
-		canvas.height = img.height;
-		ctx.drawImage(img, 0, 0);
-		var texData = ctx.getImageData(0, 0, img.width, img.height);
+		var texData = null;
+		if (texture != null) {
+			var img = texture.image;
+			var canvas = document.createElement('canvas');
+			var ctx = canvas.getContext('2d');
+			canvas.width  = img.width;
+			canvas.height = img.height;
+			ctx.drawImage(img, 0, 0);
+			texData = ctx.getImageData(0, 0, img.width, img.height).data;
+		}
 
 		for (var tri = 0; tri < triangleCount; ++tri) {
 			var iax = tri*9;
@@ -94,7 +100,7 @@ define(['THREE', 'utils/utils'], function(THREE, utils){
 							attributes.position.array.push(position.x, position.y, position.z);
 							attributes.uv.array.push(uvX, uvY);
 							attributes.normal.array.push(nX, nY, nZ);
-							var color = getColorAt(texData.data, img.width, img.height, uvX, uvY);
+							var color = getColorAt(texData, img.width, img.height, uvX, uvY);
 							attributes.color.array.push(color[0], color[1], color[2]);
 						}
 					}
