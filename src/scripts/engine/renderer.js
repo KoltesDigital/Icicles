@@ -1,4 +1,4 @@
-define(['THREE', 'uniforms'],	function(THREE, uniforms) {
+define(['THREE', 'engine/uniforms'],	function(THREE, uniforms) {
 
 	var container = document.getElementById('container');
 	var renderer = new THREE.WebGLRenderer();

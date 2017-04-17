@@ -1,4 +1,4 @@
-define(['THREE', 'utils'], function(THREE, utils){
+define(['THREE', 'utils/utils'], function(THREE, utils){
 
 	var triBoxOverlap = utils.triBoxOverlap;
 	var triangleArea = utils.triangleArea;

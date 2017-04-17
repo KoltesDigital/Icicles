@@ -1,4 +1,5 @@
-define(['THREE', 'assets', 'framebuffer', 'renderer'], function (THREE, assets, FrameBuffer, renderer) {
+define(['THREE', 'utils/assets', 'engine/framebuffer', 'engine/renderer'],
+function (THREE, assets, FrameBuffer, renderer) {
 
 	function Pass (shader, passUniforms, width, height, format, type)
 	{

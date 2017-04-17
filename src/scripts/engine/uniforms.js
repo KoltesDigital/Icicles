@@ -1,4 +1,4 @@
-define(['THREE', 'assets'],	function(THREE, assets) {
+define(['THREE', 'utils/assets'],	function(THREE, assets) {
 	var uniforms = {
 		time: { value: 1.0 },
 		frameBuffer: { value: 0 },

@@ -1,4 +1,4 @@
-define(['THREE', 'renderer', 'assets', 'uniforms', 'voxelize', 'libs/OrbitControls', 'framebuffer', 'particles', 'pass'],
+define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'engine/particles', 'engine/pass'],
 	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, Particles, Pass) {
 	"use strict";
 

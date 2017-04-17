@@ -1,4 +1,5 @@
-define(['THREE', 'assets', 'utils', 'pass'], function (THREE, assets, utils, Pass) {
+define(['THREE', 'utils/assets', 'utils/utils', 'engine/pass'],
+function (THREE, assets, utils, Pass) {
 
 	var closestPowerOfTwo = utils.closestPowerOfTwo;
 
