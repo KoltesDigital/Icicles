@@ -1,5 +1,5 @@
-define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'engine/particles', 'engine/pass'],
-	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, Particles, Pass) {
+define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'engine/particles', 'engine/pass', 'utils/getTime'],
+	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, Particles, Pass, getTime) {
 	"use strict";
 
 	var camera, scene, controls;
@@ -54,10 +54,13 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			raymarchingPass = new Pass(assets.shaders['raymarching.frag'], uniforms);
 		}
 
-		function animate() {
+		function animate ()
+		{
 			requestAnimationFrame( animate );
 			controls.update();
-			uniforms.time.value += 0.05;
+
+			var time = getTime();
+			uniforms.time.value = time;
 			uniforms.eye.value = camera.position;
 			uniforms.front.value = camera.getWorldDirection().normalize();
 			uniforms.right.value = vectorRight.set(1,0,0).applyMatrix4( camera.matrixWorld ).sub( camera.position ).normalize();
