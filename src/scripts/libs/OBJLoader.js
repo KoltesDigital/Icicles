@@ -1,6 +1,7 @@
 /**
  * @author mrdoob / http://mrdoob.com/
  */
+define(['THREE'], function (THREE) {
 
 THREE.OBJLoader = function ( manager ) {
 
@@ -741,3 +742,5 @@ THREE.OBJLoader.prototype = {
 	}
 
 };
+return THREE.OBJLoader;
+});

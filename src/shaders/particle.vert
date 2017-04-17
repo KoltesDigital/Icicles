@@ -50,7 +50,7 @@ void main() {
 	tangent = mix(tangent, normalize(cross(normalize(velocity.xyz + e), normal)), moving);
 	up = mix(up, normalize(velocity.xyz + e)*stretch, moving);
 
-	float size = 0.01 + magnitude;
+	float size = 0.01 + rand(vTexcoord) * 0.01 + magnitude;
 	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * size * fade;
 
 	vViewDir = posWorld.xyz - cameraPosition;

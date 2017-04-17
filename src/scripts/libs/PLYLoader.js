@@ -25,6 +25,7 @@
  * } );
  *
  */
+define(['THREE'], function (THREE) {
 
 
 THREE.PLYLoader = function ( manager ) {
@@ -499,3 +500,7 @@ THREE.PLYLoader.prototype = {
 	}
 
 };
+
+return THREE.PLYLoader;
+
+});

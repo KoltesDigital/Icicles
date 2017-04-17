@@ -1,151 +1,154 @@
+define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(THREE, loader, PLYLoader, OBJLoader) {
+	
+	var textureDescriptors = {
+		'panorama': "images/Room.jpg",
+		'duck': "images/duck.png",
+		'zebra': "images/zebra.png",
+	};
 
+	var meshDescriptors = {
+		// 'building1': "meshes/building1.ply",
+		// 'building2': "meshes/building2.ply",
+		// 'building3': "meshes/building3.ply",
+		// 'pole1': "meshes/pole1.ply",
+		// 'pole2': "meshes/pole2.ply",
+		// 'car': "meshes/car.ply",
+		// 'car2': "meshes/car2.line",
+	};
 
-var textureDescriptors = {
-	'panorama': "images/Room.jpg",
-	'duck': "images/duck.png",
-	'zebra': "images/zebra.png",
-};
+	var geometryDescriptors = {
+		'cookie': 'meshes/Cookie.ply',
+		'duck': 'meshes/duck.obj',
+		'zebra': 'meshes/zebra.obj',
+	};
 
-var meshDescriptors = {
-	// 'building1': "meshes/building1.ply",
-	// 'building2': "meshes/building2.ply",
-	// 'building3': "meshes/building3.ply",
-	// 'pole1': "meshes/pole1.ply",
-	// 'pole2': "meshes/pole2.ply",
-	// 'car': "meshes/car.ply",
-	// 'car2': "meshes/car2.line",
-};
+	var shaderDescriptors = {
+		'fullscreen.vert': 'fullscreen.vert',
+		'particle.vert': 'particle.vert',
+		'particle.frag': 'particle.frag',
+		'render.frag': 'render.frag',
+		'position.frag': 'position.frag',
+		'velocity.frag': 'velocity.frag',
+		'feedback.frag': 'feedback.frag',
+		'raymarching.frag': 'raymarching.frag',
+	};
 
-var geometryDescriptors = {
-	'cookie': 'meshes/Cookie.ply',
-	'duck': 'meshes/duck.obj',
-	'zebra': 'meshes/zebra.obj',
-};
+	var shaderBaseURL = 'shaders/';					
 
-var shaderDescriptors = {
-	'fullscreen.vert': 'fullscreen.vert',
-	'particle.vert': 'particle.vert',
-	'particle.frag': 'particle.frag',
-	'render.frag': 'render.frag',
-	'position.frag': 'position.frag',
-	'velocity.frag': 'velocity.frag',
-	'feedback.frag': 'feedback.frag',
-	'raymarching.frag': 'raymarching.frag',
-};
+	var pendingCallbacks = [];
+	var isLoaded = false;
 
-var shaderBaseURL = 'shaders/';
+	function load(callback) {
+		if (isLoaded) {
+			return setTimeout(function() {
+				return callback(assets);
+			});
+		}
 
-var pendingCallbacks = [];
-var isLoaded = false;
-
-function load(callback) {
-	if (isLoaded) {
-		return setTimeout(function() {
-			return callback(assets);
-		});
+		return pendingCallbacks.push(callback);
 	}
 
-	return pendingCallbacks.push(callback);
-}
+	var assets = {
+		// 'actions': new blenderHTML5Animations.ActionLibrary(actionsDescriptor),
+		'load': load,
+		'geometries': {},
+		'textures': {}
+	};
 
-var assets = {
-	// 'actions': new blenderHTML5Animations.ActionLibrary(actionsDescriptor),
-	'load': load,
-	'geometries': {},
-	'textures': {}
-};
+	function notify() {
+		isLoaded = assets.shaders 
+		&& Object.keys(assets.textures).length == Object.keys(textureDescriptors).length 
+		&& Object.keys(assets.geometries).length == Object.keys(geometryDescriptors).length;
+		// && assets.meshes;
 
-function notify() {
-	isLoaded = assets.shaders 
-	&& Object.keys(assets.textures).length == Object.keys(textureDescriptors).length 
-	&& Object.keys(assets.geometries).length == Object.keys(geometryDescriptors).length;
-	// && assets.meshes;
-
-	if (isLoaded) {
-		return pendingCallbacks.forEach(function(callback) {
-			return callback();
-		});
-	}
-}
-
-var shaderURLs = [
-	// "header.glsl",
-	// "uniforms.glsl",
-	// "modifiers.glsl",
-	"utils.glsl",
-	// "hg_sdf.glsl",
-].map(function(name) {
-	return shaderBaseURL + name;
-});
-
-Object.keys(shaderDescriptors).forEach(function(name) {
-	var url = shaderDescriptors[name];
-	shaderURLs.push( shaderBaseURL + url );
-});
-
-
-loadFiles(shaderURLs, function (err, files) {
-	if (err) throw err;
-
-	var headers = files[shaderBaseURL + "utils.glsl"];// + files[shaderBaseURL + "hg_sdf.glsl"];
-
-	function fileWithHeaders(name) {
-		return headers + files[name];
+		if (isLoaded) {
+			return pendingCallbacks.forEach(function(callback) {
+				return callback();
+			});
+		}
 	}
 
-	var shaders = {};
+	var shaderURLs = [
+		// "header.glsl",
+		// "uniforms.glsl",
+		// "modifiers.glsl",
+		"utils.glsl",
+		// "hg_sdf.glsl",
+	].map(function(name) {
+		return shaderBaseURL + name;
+	});
+
 	Object.keys(shaderDescriptors).forEach(function(name) {
 		var url = shaderDescriptors[name];
-		// var programInfo = twgl.createProgramInfo(gl, [
-		// 	fileWithHeaders(shaderBaseURL + url + '.vert'),
-		// 	fileWithHeaders(shaderBaseURL + url + '.frag'),
-		// ]);
-		shaders[name] = fileWithHeaders(shaderBaseURL + url);
+		shaderURLs.push( shaderBaseURL + url );
 	});
 
-	assets.shaders = shaders;
-	return notify();
-});
 
+	loader.loadFiles(shaderURLs, function (err, files) {
+		if (err) throw err;
 
-var textureLoader = new THREE.TextureLoader();
-Object.keys(textureDescriptors).forEach(function(name) {
-	textureLoader.load(textureDescriptors[name], function(texture) {
-		assets.textures[name] = texture;
+		var headers = files[shaderBaseURL + "utils.glsl"];// + files[shaderBaseURL + "hg_sdf.glsl"];
+
+		function fileWithHeaders(name) {
+			return headers + files[name];
+		}
+
+		var shaders = {};
+		Object.keys(shaderDescriptors).forEach(function(name) {
+			var url = shaderDescriptors[name];
+			// var programInfo = twgl.createProgramInfo(gl, [
+			// 	fileWithHeaders(shaderBaseURL + url + '.vert'),
+			// 	fileWithHeaders(shaderBaseURL + url + '.frag'),
+			// ]);
+			shaders[name] = fileWithHeaders(shaderBaseURL + url);
+		});
+
+		assets.shaders = shaders;
 		return notify();
 	});
-});
 
 
-var plyLoader = new THREE.PLYLoader();
-var objLoader = new THREE.OBJLoader();
-
-var meshURLs = [];
-Object.keys(geometryDescriptors).forEach(function(name) {
-	var url = geometryDescriptors[name];
-	var infos = url.split('.');
-	var extension = infos[infos.length-1];
-	if (extension == 'ply') {
-		plyLoader.load(url, function(geometry){
-			assets.geometries[name] = geometry;
+	var textureLoader = new THREE.TextureLoader();
+	Object.keys(textureDescriptors).forEach(function(name) {
+		textureLoader.load(textureDescriptors[name], function(texture) {
+			assets.textures[name] = texture;
 			return notify();
 		});
-	} else if (extension == 'obj') {
-		objLoader.load(url, function(geometry){
-			assets.geometries[name] = geometry;
-			return notify();
-		});
-	}
+	});
+
+
+	var plyLoader = new THREE.PLYLoader();
+	var objLoader = new THREE.OBJLoader();
+
+	var meshURLs = [];
+	Object.keys(geometryDescriptors).forEach(function(name) {
+		var url = geometryDescriptors[name];
+		var infos = url.split('.');
+		var extension = infos[infos.length-1];
+		if (extension == 'ply') {
+			plyLoader.load(url, function(geometry){
+				assets.geometries[name] = geometry;
+				return notify();
+			});
+		} else if (extension == 'obj') {
+			objLoader.load(url, function(geometry){
+				assets.geometries[name] = geometry;
+				return notify();
+			});
+		}
+	});
+
+
+	// loadFiles(meshURLs, function (err, files) {
+	// 	var meshes = {};
+	// 	Object.keys(meshDescriptors).forEach(function(name, index) {
+	// 		meshes[name] = files[meshDescriptors[name]];
+
+
+	// 	});
+	// 	assets.meshes = meshes;
+	// 	return notify();
+	// });
+
+	return assets;
 });
-
-
-// loadFiles(meshURLs, function (err, files) {
-// 	var meshes = {};
-// 	Object.keys(meshDescriptors).forEach(function(name, index) {
-// 		meshes[name] = files[meshDescriptors[name]];
-
-
-// 	});
-// 	assets.meshes = meshes;
-// 	return notify();
-// });

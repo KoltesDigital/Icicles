@@ -12,6 +12,7 @@
 //    Orbit - left mouse / touch: one finger move
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finger swipe
+define(['THREE'], function (THREE) {
 
 THREE.OrbitControls = function ( object, domElement ) {
 
@@ -1014,3 +1015,6 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 	}
 
 } );
+	return THREE.OrbitControls;
+
+});
