@@ -16,6 +16,10 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 
 		function init() {
 			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.001, 1000 );
+			renderer.resizeCallbacks.push(function (width, height) {
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+			})
 			// camera.matrixAutoUpdate = false;
 			camera.position.z = 2;
 			camera.position.y = 1;

@@ -1,4 +1,4 @@
-define(['THREE'], function (THREE) {
+define(['THREE', 'engine/renderer'], function (THREE, renderer) {
 
 	function FrameBuffer (width, height, format, type)
 	{
@@ -27,6 +27,15 @@ define(['THREE'], function (THREE) {
 		this.swap = function ()
 		{
 			this.current = (this.current + 1) % this.count;
+		}
+
+		if (type == THREE.UnsignedByteType) {
+			var self = this;
+			renderer.resizeCallbacks.push(function (width, height) {
+				for (var i = 0; i < self.count; ++i) {
+					self.renderTextures[i].setSize(width, height);
+				}
+			});
 		}
 	}
 	return FrameBuffer;
