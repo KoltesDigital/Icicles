@@ -21,20 +21,20 @@ define(['THREE', 'utils/assets', 'engine/uniforms'], function(THREE, assets, uni
 			fragmentShader: assets.shaders['raymarching.frag']
 		});
 
-		materials.particlesAdvanced = new THREE.ShaderMaterial( {
+		materials.particle = new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["particle.vert"],
 			fragmentShader: assets.shaders["particle.frag"],
 			side: THREE.DoubleSide
 		});
 
-		materials.particlesPosition = new THREE.ShaderMaterial( {
+		materials.position = new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["fullscreen.vert"],
 			fragmentShader: assets.shaders['position.frag']
 		});
 
-		materials.particlesVelocity = new THREE.ShaderMaterial( {
+		materials.velocity = new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: assets.shaders["fullscreen.vert"],
 			fragmentShader: assets.shaders['velocity.frag']

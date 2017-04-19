@@ -68,16 +68,16 @@ function (THREE, Particles, utils, assets, Pass, gui, parameters, materials) {
 			this.uniforms[this.parameterList[i]] = { value: 0 };
 		}
 
-		this.positionPass = new Pass(materials.particlesPosition, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
-		this.velocityPass = new Pass(materials.particlesVelocity, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+		this.positionPass = new Pass(materials.position, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
+		this.velocityPass = new Pass(materials.velocity, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 
-		this.mesh = new THREE.Mesh(this.geometry, materials.particlesAdvanced);
+		this.mesh = new THREE.Mesh(this.geometry, materials.particle);
 
 		this.update = function ()
 		{
-			materials.particlesAdvanced.uniforms = this.uniforms;
-			materials.particlesPosition.uniforms = this.uniforms;
-			materials.particlesVelocity.uniforms = this.uniforms;
+			materials.particle.uniforms = this.uniforms;
+			materials.position.uniforms = this.uniforms;
+			materials.velocity.uniforms = this.uniforms;
 			this.uniforms.time.value += 0.05;
 			this.uniforms.matrix.value = this.mesh.matrixWorld;
 			this.uniforms.pivot.value = this.mesh.position;

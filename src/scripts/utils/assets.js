@@ -120,10 +120,11 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 		return notify();
 	});
 
-	assets.reload = function (assetName) {
+	assets.reload = function (assetName, callback) {
 		loader.loadFiles([shaderBaseURL + assetName], function (err, files) {
 			assets.fileLoaded[shaderBaseURL + assetName] = files[shaderBaseURL + assetName];
 			assets.shaders[assetName] = fileWithHeaders(shaderBaseURL + shaderDescriptors[assetName]);
+			if (callback != null) callback();
 		});
 	};
 

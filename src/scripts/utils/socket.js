@@ -15,9 +15,16 @@ define(['socket-io', 'utils/assets', 'engine/materials'], function(io, assets, m
 		var fileName = infos2[infos2.length-1];
 		var name = fileName.split('.')[0];
 		if (extension == 'frag' || extension == 'vert') {
-			assets.reload(fileName);
-			materials[name].fragmentShader = assets.shaders[fileName];
-			materials[name].needsUpdate = true;
+			if (materials[name] != null) {
+				assets.reload(fileName, function () {
+					if (extension == 'frag') {
+						materials[name].fragmentShader = assets.shaders[fileName];
+					} else {
+						materials[name].vertexShader = assets.shaders[fileName];
+					}
+					materials[name].needsUpdate = true;
+				});
+			}
 		}
 	}
 
