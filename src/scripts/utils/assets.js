@@ -165,45 +165,5 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 	// 	return notify();
 	// });
 
-	
-	function startWatching() {
-		var file;
-
-		if (typeof window.FileReader !== 'function') {
-			console.log("The file API isn't supported on this browser yet.");
-			return;
-		}
-
-		input = document.getElementById('filename');
-		if (!input) {
-			console.log("Um, couldn't find the filename element.");
-		}
-		else if (!input.files) {
-			console.log("This browser doesn't seem to support the `files` property of file inputs.");
-		}
-		else if (!input.files[0]) {
-			console.log("Please select a file before clicking 'Show Size'");
-		}
-		else {
-			file = input.files[0];
-		console.log(file)
-
-			lastMod = file.lastModified;
-			console.log("Last modified date: " + lastMod);
-			console.log("Change the file");
-			setInterval(tick, 250);
-		}
-	}
-
-	function tick() {
-		var file = input.files && input.files[0];
-		if (file && lastMod && file.lastModified !== lastMod) {
-			lastMod = file.lastModified;
-			console.log("File changed: " + lastMod);
-		}
-	}
-
-	startWatching();
-
 	return assets;
 });

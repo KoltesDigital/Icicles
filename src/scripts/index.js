@@ -7,6 +7,7 @@ requirejs.config({
 		'RNG': 'libs/rng',
 		'THREE': 'libs/three',
 		'dat-gui': 'libs/dat.gui.min',
+		'socket-io': 'libs/socket.io.min',
 	},
 	shim: {
 		'actions': {

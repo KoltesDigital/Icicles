@@ -1,5 +1,5 @@
-define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'particles/particlesadvanced', 'particles/particlessimple', 'engine/pass', 'utils/getTime', 'utils/blender', 'dat-gui', 'engine/parameters'],
-	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, ParticlesAdvanced, ParticlesSimple, Pass, getTime, blender, gui, parameters) {
+define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'particles/particlesadvanced', 'particles/particlessimple', 'engine/pass', 'utils/getTime', 'utils/blender', 'dat-gui', 'engine/parameters', 'utils/socket', 'engine/materials'],
+	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, ParticlesAdvanced, ParticlesSimple, Pass, getTime, blender, gui, parameters, socket, materials) {
 	"use strict";
 
 	var camera, scene, controls;
@@ -29,11 +29,7 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			controls.rotateSpeed = 0.5;
 
 			// render
-			scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), new THREE.ShaderMaterial( {
-				uniforms: uniforms,
-				vertexShader: assets.shaders['fullscreen.vert'],
-				fragmentShader: assets.shaders['render.frag']
-			})));
+			scene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry( 2, 2 ), materials.render));
 
 			sceneBuffer = new THREE.Scene();
 			frameBufferScene = new FrameBuffer();
@@ -61,15 +57,17 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 
 			uniforms.sceneTexture.value = frameBufferScene.getTexture();
 
-			feedbackPass = new Pass(assets.shaders['feedback.frag'], uniforms);
-			raymarchingPass = new Pass(assets.shaders['raymarching.frag'], uniforms);
-			console.log(gui)
+			feedbackPass = new Pass(materials.feedback);
+			// materials.feedback.uniforms = uniforms;
+			// raymarchingPass = new Pass(materials.raymarching);
 		}
 
 		function animate ()
 		{
 			requestAnimationFrame( animate );
 			controls.update();
+			
+
 
 			uniforms.feedbackBlend.value = parameters.feedbackBlend;
 
@@ -83,7 +81,6 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			// uniforms.raymarchingTexture.value = raymarchingPass.update();
 			// LesCopainsParticles.update();
 			watermelonParticles.update();
-
 			// blender.evaluate(camera.matrix, "CameraAction", time);
 			camera.updateMatrixWorld(true);
 
