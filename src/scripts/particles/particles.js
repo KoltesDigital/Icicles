@@ -68,25 +68,11 @@ function (THREE, assets, utils, Pass) {
 		this.geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
 		this.geometry.addAttribute( 'anchor', new THREE.BufferAttribute( anchor, 2 ) );
 		this.geometry.addAttribute( 'texcoord', new THREE.BufferAttribute( texcoord, 2 ) );
-		if (attributes.uv != null) {
-			var uvArray = attributes.uv.array;
-			var uvDataArray = new Float32Array(attributes.uv.array.length*3);
-			var indexVertex = 0;
-			for (var indexTri = 0; indexTri < uvArray.length; indexTri+=2) {
-				//a
-				uvDataArray[indexVertex] = uvArray[indexTri];
-				uvDataArray[indexVertex+1] = uvArray[indexTri+1];
-				//b
-				uvDataArray[indexVertex+2] = uvArray[indexTri];
-				uvDataArray[indexVertex+3] = uvArray[indexTri+1];
-				//c
-				uvDataArray[indexVertex+4] = uvArray[indexTri];
-				uvDataArray[indexVertex+5] = uvArray[indexTri+1];
-				indexVertex += 6;
-			}
-			this.geometry.addAttribute( 'uvMesh', new THREE.BufferAttribute( uvDataArray, 2 ) );
-		}
-		this.geometry.computeBoundingSphere();
+		
+		// this.geometry.computeBoundingBox();
+		var min = -100;
+		var max = 100;
+		this.geometry.boundingBox = new THREE.Box3(new THREE.Vector3(min,min,min), new THREE.Vector3(max,max,max));
 	}
 
 	return Particles;

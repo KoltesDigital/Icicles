@@ -16,7 +16,8 @@ define(['THREE', 'utils/assets'],	function(THREE, assets) {
 		eye: { value: 0 },
 		front: { value: 0 },
 		right: { value: 0 },
-		up: { value: 0 }
+		up: { value: 0 },
+		feedbackBlend: { value: 0 },
 	};
 
 	return uniforms;

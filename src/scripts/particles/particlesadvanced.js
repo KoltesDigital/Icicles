@@ -1,5 +1,5 @@
-define(['THREE', 'particles/particles', 'utils/utils', 'utils/assets', 'engine/pass'],
-function (THREE, Particles, utils, assets, Pass) {
+define(['THREE', 'particles/particles', 'utils/utils', 'utils/assets', 'engine/pass', 'utils/gui', 'engine/parameters'],
+function (THREE, Particles, utils, assets, Pass, gui, parameters) {
 	var closestPowerOfTwo = utils.closestPowerOfTwo;
 	function ParticlesAdvanced (attributes)
 	{
@@ -21,31 +21,21 @@ function (THREE, Particles, utils, assets, Pass) {
 		var dataColor = new Float32Array(resolution * 3);
 		var dataNormal = new Float32Array(resolution * 3);
 
+
 		// triangles
 		for (var triangleIndex = 0; triangleIndex < count; triangleIndex++) {
-
-			// var indexRatio = triangleIndex / count
 			ia = triangleIndex*3;
 			ib = triangleIndex*3+1;
 			ic = triangleIndex*3+2;
-
-			x = array[ia];
-			y = array[ib];
-			z = array[ic];
-
-			nx = normalArray[ia];
-			ny = normalArray[ib];
-			nz = normalArray[ic];
-
-	    dataPosition[ia] = x;
-	    dataPosition[ib] = y;
-	    dataPosition[ic] = z;
+	    dataPosition[ia] = array[ia];
+	    dataPosition[ib] = array[ib];
+	    dataPosition[ic] = array[ic];
 	    dataColor[ia] = colors[ia];
 	    dataColor[ib] = colors[ib];
 	    dataColor[ic] = colors[ic];
-	    dataNormal[ia] = nx;
-	    dataNormal[ib] = ny;
-	    dataNormal[ic] = nz;
+	    dataNormal[ia] = normalArray[ia];
+	    dataNormal[ib] = normalArray[ib];
+	    dataNormal[ic] = normalArray[ic];
 		}
 
 		this.spawnTexture = new THREE.DataTexture(dataPosition, dimension, dimension, THREE.RGBFormat, THREE.FloatType);
@@ -72,6 +62,12 @@ function (THREE, Particles, utils, assets, Pass) {
 			panoramaTexture: { value: assets.textures.panorama }
 		};
 
+		this.parameterList = Object.keys(parameters);
+
+		for (var i = 0; i < this.parameterList.length; i++) {
+			this.uniforms[this.parameterList[i]] = { value: 0 };
+		}
+
 		this.positionPass = new Pass(assets.shaders['position.frag'], this.uniforms, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 		this.velocityPass = new Pass(assets.shaders['velocity.frag'], this.uniforms, dimension, dimension, THREE.RGBAFormat, THREE.FloatType);
 
@@ -92,6 +88,9 @@ function (THREE, Particles, utils, assets, Pass) {
 			this.uniforms.normalTexture.value = this.normalTexture;
 			this.uniforms.velocityTexture.value = this.velocityPass.update();
 			this.uniforms.positionTexture.value = this.positionPass.update();
+			for (var i = 0; i < this.parameterList.length; i++) {
+				this.uniforms[this.parameterList[i]].value = parameters[this.parameterList[i]];
+			}
 		}
 	}
 

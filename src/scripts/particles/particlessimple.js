@@ -21,8 +21,8 @@ define(['THREE', 'particles/particles'], function (THREE, Particles) {
 
 		this.mesh = new THREE.Mesh(this.geometry, new THREE.ShaderMaterial( {
 			uniforms: this.uniforms,
-			vertexShader: assets.shaders["particle.vert"],
-			fragmentShader: assets.shaders["particle.frag"],
+			vertexShader: assets.shaders["simple.vert"],
+			fragmentShader: assets.shaders["simple.frag"],
 			side: THREE.DoubleSide
 		}));
 

@@ -6,6 +6,7 @@ requirejs.config({
 		'gl-matrix': 'libs/gl-matrix-min',
 		'RNG': 'libs/rng',
 		'THREE': 'libs/three',
+		'dat-gui': 'libs/dat.gui.min',
 	},
 	shim: {
 		'actions': {

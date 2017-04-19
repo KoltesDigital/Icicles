@@ -1,9 +1,13 @@
-define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(THREE, loader, PLYLoader, OBJLoader) {
+define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/parameters'],
+	function(THREE, loader, PLYLoader, OBJLoader, parameters) {
 	
 	var textureDescriptors = {
 		'panorama': "images/Room.jpg",
 		'duck': "images/duck.png",
 		'zebra': "images/zebra.png",
+		'watermelon': "images/watermelon.png",
+		'LesCopains': "images/LesCopains.jpg",
+		'LesCopainsSD': "images/LesCopainsSD.jpg",
 	};
 
 	var meshDescriptors = {
@@ -20,6 +24,8 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(TH
 		'cookie': 'meshes/Cookie.ply',
 		'duck': 'meshes/duck.obj',
 		'zebra': 'meshes/zebra.obj',
+		'LesCopains': 'meshes/LesCopains.obj',
+		'watermelon': 'meshes/watermelon.obj',
 		'test': 'meshes/test.obj',
 	};
 
@@ -32,6 +38,8 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(TH
 		'velocity.frag': 'velocity.frag',
 		'feedback.frag': 'feedback.frag',
 		'raymarching.frag': 'raymarching.frag',
+		'simple.vert': 'simple.vert',
+		'simple.frag': 'simple.frag',
 	};
 
 	var shaderBaseURL = 'shaders/';					
@@ -84,6 +92,12 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(TH
 		shaderURLs.push( shaderBaseURL + url );
 	});
 
+	var parameterList = 'uniform float ';
+	var keys = Object.keys(parameters);
+	var count = keys.length;
+	for (var i = 0; i < count; ++i) {
+		parameterList += keys[i] + (i+1!=count?', ':';');
+	}
 
 	loader.loadFiles(shaderURLs, function (err, files) {
 		if (err) throw err;
@@ -91,7 +105,7 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader'], function(TH
 		var headers = files[shaderBaseURL + "utils.glsl"];// + files[shaderBaseURL + "hg_sdf.glsl"];
 
 		function fileWithHeaders(name) {
-			return headers + files[name];
+			return headers + parameterList + files[name];
 		}
 
 		var shaders = {};
