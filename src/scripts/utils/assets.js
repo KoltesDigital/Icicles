@@ -99,22 +99,20 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 		parameterList += keys[i] + (i+1!=count?', ':';');
 	}
 
+	assets.fileLoaded = {};
+
+	function fileWithHeaders(name) {
+		return assets.fileLoaded[shaderBaseURL + "utils.glsl"] + parameterList + assets.fileLoaded[name];
+	}
+
 	loader.loadFiles(shaderURLs, function (err, files) {
 		if (err) throw err;
 
-		var headers = files[shaderBaseURL + "utils.glsl"];// + files[shaderBaseURL + "hg_sdf.glsl"];
-
-		function fileWithHeaders(name) {
-			return headers + parameterList + files[name];
-		}
+		assets.fileLoaded = files;
 
 		var shaders = {};
 		Object.keys(shaderDescriptors).forEach(function(name) {
 			var url = shaderDescriptors[name];
-			// var programInfo = twgl.createProgramInfo(gl, [
-			// 	fileWithHeaders(shaderBaseURL + url + '.vert'),
-			// 	fileWithHeaders(shaderBaseURL + url + '.frag'),
-			// ]);
 			shaders[name] = fileWithHeaders(shaderBaseURL + url);
 		});
 
@@ -122,6 +120,12 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 		return notify();
 	});
 
+	assets.reload = function (assetName) {
+		loader.loadFiles([shaderBaseURL + assetName], function (err, files) {
+			assets.fileLoaded[shaderBaseURL + assetName] = files[shaderBaseURL + assetName];
+			assets.shaders[assetName] = fileWithHeaders(shaderBaseURL + shaderDescriptors[assetName]);
+		});
+	};
 
 	var textureLoader = new THREE.TextureLoader();
 	Object.keys(textureDescriptors).forEach(function(name) {

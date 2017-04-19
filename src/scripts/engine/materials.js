@@ -1,42 +1,45 @@
-define(['THREE', 'utils/assets', 'engine/uniforms', 'utils/socket'], function(THREE, assets, uniforms, socket) {
+define(['THREE', 'utils/assets', 'engine/uniforms'], function(THREE, assets, uniforms) {
 	var materials = {};
 
-	materials.render = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders['fullscreen.vert'],
-		fragmentShader: assets.shaders['render.frag']
-	})
+	materials.setup = function () {
 
-	materials.feedback = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders['fullscreen.vert'],
-		fragmentShader: assets.shaders['feedback.frag']
-	});
+		materials.render = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders['fullscreen.vert'],
+			fragmentShader: assets.shaders['render.frag']
+		})
 
-	materials.raymarching = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders['fullscreen.vert'],
-		fragmentShader: assets.shaders['raymarching.frag']
-	});
+		materials.feedback = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders['fullscreen.vert'],
+			fragmentShader: assets.shaders['feedback.frag']
+		});
 
-	materials.particlesAdvanced = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders["particle.vert"],
-		fragmentShader: assets.shaders["particle.frag"],
-		side: THREE.DoubleSide
-	});
+		materials.raymarching = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders['fullscreen.vert'],
+			fragmentShader: assets.shaders['raymarching.frag']
+		});
 
-	materials.particlesPosition = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders["fullscreen.vert"],
-		fragmentShader: assets.shaders['position.frag']
-	});
+		materials.particlesAdvanced = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders["particle.vert"],
+			fragmentShader: assets.shaders["particle.frag"],
+			side: THREE.DoubleSide
+		});
 
-	materials.particlesVelocity = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: assets.shaders["fullscreen.vert"],
-		fragmentShader: assets.shaders['velocity.frag']
-	});
+		materials.particlesPosition = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders["fullscreen.vert"],
+			fragmentShader: assets.shaders['position.frag']
+		});
+
+		materials.particlesVelocity = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: assets.shaders["fullscreen.vert"],
+			fragmentShader: assets.shaders['velocity.frag']
+		});
+	}
 
 	return materials;
 })

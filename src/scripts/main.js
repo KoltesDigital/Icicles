@@ -1,5 +1,5 @@
 define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/voxelize', 'libs/OrbitControls', 'engine/framebuffer', 'particles/particlesadvanced', 'particles/particlessimple', 'engine/pass', 'utils/getTime', 'utils/blender', 'dat-gui', 'engine/parameters', 'utils/socket', 'engine/materials'],
-	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, ParticlesAdvanced, ParticlesSimple, Pass, getTime, blender, gui, parameters, socket, materials) {
+	function (THREE, renderer, assets, uniforms, voxelize, OrbitControls, FrameBuffer, ParticlesAdvanced, ParticlesSimple, Pass, getTime, blender, gui, parameters, Socket, materials) {
 	"use strict";
 
 	var camera, scene, controls;
@@ -15,12 +15,12 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 		var vectorRight, vectorUp;
 
 		function init() {
-
 			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.001, 1000 );
 			// camera.matrixAutoUpdate = false;
 			camera.position.z = 2;
 			camera.position.y = 1;
 			scene = new THREE.Scene();
+			materials.setup();
 
 			vectorRight = new THREE.Vector3( 1, 0, 0 );
 			vectorUp = new THREE.Vector3( 0, 1, 0 );
