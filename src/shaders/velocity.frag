@@ -20,7 +20,7 @@ void main()	{
 	vec3 epsilon = vec3(1)*0.00001;
 
 	// target
-	vec3 target = normalize(vec3(0) - position.xyz + epsilon) * velocityTargetSpeed;
+	vec3 target = normalize(vec3(0) - position.xyz + epsilon) * velocityTargetBlend;
 
 	// noisey
 	vec3 noisey = vec3(0.);
@@ -29,22 +29,22 @@ void main()	{
 	noisey.x += (noiseIQ(seed.xyz*2.5)*2.-1.);
 	noisey.y += (noiseIQ(seed.xyz*1.4)*2.-1.);
 	noisey.z += (noiseIQ(seed.xyz*3.3)*2.-1.);
-	noisey.xyz *= velocityNoiseSpeed;
+	noisey.xyz *= velocityNoiseBlend;
 
 	// tornardo
-	vec3 tornado = normalize(epsilon + position - (target + rotateY(position - target, abs(position.y )))) * velocityTornadoSpeed;
+	vec3 tornado = normalize(epsilon + position - (target + rotateY(position - target, abs(position.y )))) * velocityTornadoBlend;
 
 	// dir
-	vec3 dir = vec3(0,1,0) * velocityDirectionSpeed;
+	vec3 dir = vec3(0,1,0) * velocityDirectionBlend;
 
 	// origin
-	vec3 origin = normalize(spawn.xyz - position.xyz + epsilon) * velocityOriginSpeed;
+	vec3 origin = normalize(spawn.xyz - position.xyz + epsilon) * velocityOriginBlend;
 
 	// apply
 	// spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
-	float should = smoothstep(0.8,0.9,mod(noiseIQ(seed) + time * 0.1,1.0));
+	float should = smoothstep(turbulenceRangeMin,turbulenceRangeMax,mod(noiseIQ(seed) + time * 0.1,1.0));
 	vec3 offset = (tornado + dir + noisey + target) * should + origin * (1. - should);
-	gl_FragColor.xyz  = buffer.xyz * 0.9 + offset * velocitySpeed;
+	gl_FragColor.xyz = mix(buffer.xyz * velocityFrictionBlend, offset * velocitySpeed, velocityDamping);
 
 	// spawning
 	float spawnOffset = rand(vUv) * 0.006 + 0.006;

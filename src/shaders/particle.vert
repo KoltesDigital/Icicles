@@ -38,7 +38,7 @@ void main() {
 	float fade = smoothstep(0.0, 0.1, velocity.w) * (1. - smoothstep(0.9, 1.0, velocity.w));
 	fade = mix(fade, 1., step(1., velocity.w));
 
-	float stretch = (1.+magnitude*100.);
+	float stretch = (1.+magnitude*spriteVelocityStretch);
 
 	// world space
 	vec3 tangent = normalize(cross(vec3(0,1,0), normal));
