@@ -5,7 +5,7 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 	var camera, scene, controls;
 	var sceneBuffer, frameBufferScene;
 	var feedbackPass, raymarchingPass;
-	var zebraParticles, duckParticles, watermelonParticles;
+	var zebraParticles, duckParticles, watermelonParticles, Simon1Particles;
 	var LesCopainsParticles;
 
 	assets.load(function() {
@@ -59,6 +59,11 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			watermelonParticles = new ParticlesAdvanced(voxelize(watermelon, 100., 256, assets.textures.watermelon));
 			sceneBuffer.add(watermelonParticles.mesh);
 
+			// var Simon1 = assets.geometries.Simon1;
+			// Simon1Particles = new ParticlesAdvanced(Simon1.attributes);
+			// Simon1Particles.mesh.frustumCulled = false;
+			// sceneBuffer.add(Simon1Particles.mesh);
+
 			uniforms.sceneTexture.value = frameBufferScene.getTexture();
 
 			feedbackPass = new Pass(materials.feedback);
@@ -83,7 +88,7 @@ define(['THREE', 'engine/renderer', 'utils/assets', 'engine/uniforms', 'utils/vo
 			uniforms.up.value = vectorUp.set(0,1,0).applyMatrix4( camera.matrixWorld ).sub( camera.position ).normalize();
 			uniforms.feedbackTexture.value = feedbackPass.update();
 			// uniforms.raymarchingTexture.value = raymarchingPass.update();
-			// LesCopainsParticles.update();
+			// Simon1Particles.update();
 			watermelonParticles.update();
 			// blender.evaluate(camera.matrix, "CameraAction", time);
 			camera.updateMatrixWorld(true);

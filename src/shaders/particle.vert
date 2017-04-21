@@ -33,7 +33,7 @@ void main() {
 	vColor = col;
 	// vColor = vec3(vTexcoord.xy,0);
 	// vColor = normal * 0.5 + 0.5;
-	vNormal = (modelMatrix * vec4(normal,0)).xyz;
+	vNormal = normalize((modelMatrix * vec4(normal,0)).xyz);
 
 	float fade = smoothstep(0.0, 0.1, velocity.w) * (1. - smoothstep(0.9, 1.0, velocity.w));
 	fade = mix(fade, 1., step(1., velocity.w));
@@ -41,17 +41,20 @@ void main() {
 	float stretch = (1.+magnitude*spriteVelocityStretch);
 
 	// world space
-	vec3 tangent = normalize(cross(vec3(0,1,0), normal));
-	vec3 up = normalize(cross(tangent, normal));
+	vec3 tangent = normalize(cross(vec3(0,1,0), vNormal));
+	vec3 up = normalize(cross(tangent, vNormal));
 
-	float moving = step(0.01, magnitude);
+	float moving = smoothstep(0.0, 0.1, magnitude);
 	// velocity space
 	vec3 e = vec3(0.00001);
-	tangent = mix(tangent, normalize(cross(normalize(velocity.xyz + e), normal)), moving);
-	up = mix(up, normalize(velocity.xyz + e)*stretch, moving);
+	velocity.xyz = normalize(velocity.xyz + e);
+	tangent = mix(tangent, normalize(cross(velocity.xyz, normal)), moving);
+	up = mix(up, velocity.xyz*stretch, moving);
+
+	// vColor = mix(vColor, velocity.xyz*0.5+0.5, moving);
 
 	float size = 0.01 + rand(vTexcoord) * 0.01 + magnitude;
-	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * size * fade;
+	posWorld.xyz += (anchor.x * tangent + anchor.y * up) * size;// * fade;
 
 	vViewDir = posWorld.xyz - cameraPosition;
 

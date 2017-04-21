@@ -6,7 +6,7 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 		'duck': "images/duck.png",
 		'zebra': "images/zebra.png",
 		'watermelon': "images/watermelon.png",
-		'LesCopains': "images/LesCopains.jpg",
+		// 'LesCopains': "images/LesCopains.jpg",
 		'LesCopainsSD': "images/LesCopainsSD.jpg",
 	};
 
@@ -27,6 +27,8 @@ define(['THREE', 'libs/loader', 'libs/PLYLoader', 'libs/OBJLoader', 'engine/para
 		'LesCopains': 'meshes/LesCopains.obj',
 		'watermelon': 'meshes/watermelon.obj',
 		'test': 'meshes/test.obj',
+		// 'SimonMama': 'meshes/SimonMama.ply',
+		// 'Simon1': 'meshes/Simon1.ply',
 	};
 
 	var shaderDescriptors = {

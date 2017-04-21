@@ -24,7 +24,7 @@ void main()	{
 
 	// noisey
 	vec3 noisey = vec3(0.);
-	vec3 seed = spawn+position+buffer.xyz;
+	vec3 seed = position+spawn+buffer.xyz;
 	// seed = rotateX(rotateY(seed, time*0.03), time*0.06);
 	noisey.x += (noiseIQ(seed.xyz*2.5)*2.-1.);
 	noisey.y += (noiseIQ(seed.xyz*1.4)*2.-1.);
@@ -42,7 +42,7 @@ void main()	{
 
 	// apply
 	// spawn.xyz = rotateX(rotateY(spawn.xyz, time*0.2),time*0.1);
-	float should = smoothstep(turbulenceRangeMin,turbulenceRangeMax,mod(noiseIQ(seed) + time * 0.1,1.0));
+	float should = smoothstep(turbulenceRangeMin,turbulenceRangeMax,mod(noiseIQ(seed)+time*0.1,1.0));
 	vec3 offset = (tornado + dir + noisey + target) * should + origin * (1. - should);
 	gl_FragColor.xyz = mix(buffer.xyz * velocityFrictionBlend, offset * velocitySpeed, velocityDamping);
 
